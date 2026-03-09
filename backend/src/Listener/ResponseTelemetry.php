@@ -1,0 +1,38 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Listener;
+
+use App\Game\Instrumentation\MetricsInterface;
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Event\ResponseEvent;
+
+#[AsEventListener(event: ResponseEvent::class)]
+final readonly class ResponseTelemetry
+{
+    public function __construct(private MetricsInterface $metrics)
+    {
+    }
+
+    public function __invoke(ResponseEvent $event): void
+    {
+        $response = $event->getResponse();
+
+        $this->metrics
+            ->recordMessage('my_http_response', self::getMessage($response));
+    }
+
+    private static function getMessage(Response $response): string
+    {
+        return match (true) {
+            $response->isSuccessful() => 'success',
+            $response->isClientError() => 'client_error',
+            $response->isServerError() => 'server_error',
+            $response->isRedirect() => 'redirect',
+            // default => throw new \InvalidArgumentException(sprintf('Response %d is not supported!', $response->getStatusCode())),
+            default => 'unqualified',
+        };
+    }
+}

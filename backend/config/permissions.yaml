@@ -1,0 +1,11 @@
+permissions:
+  index_games:
+    - ROLE_USER
+  add_game:
+    - ROLE_USER
+  remove_game:
+    - ROLE_USER
+  increment_score:
+    - ROLE_USER
+  show_statistics:
+    - ROLE_USER

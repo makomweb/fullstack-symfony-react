@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+    tier: telemetry
+spec:
+  containers:
+    - name: lgtm
+      image: {{ .Values.lgtm.image }}
+      ports:
+        - name: grafana
+          containerPort: 3000
+        - name: otel-grpc
+          containerPort: 4317
+        - name: otel-http
+          containerPort: 4318
+        - name: prometheus
+          containerPort: 9090
+      env:
+        - name: GF_AUTH_ANONYMOUS_ORG_ROLE
+          value: "Admin"
+        - name: GF_AUTH_ANONYMOUS_ENABLED
+          value: "true"
+        - name: GF_AUTH_BASIC_ENABLED
+          value: "false"
+        - name: GF_AUTH_DISABLE_LOGIN_FORM
+          value: "true"
+        - name: GF_FEATURE_TOGGLES_ENABLE
+          value: "accessControlOnCall traceqlEditor"
+      volumeMounts:
+        - name: my-config
+          mountPath: /etc/otel-lgtm
+      resources:
+        requests:
+          memory: "512Mi"
+          cpu: "250m"
+        limits:
+          memory: "1Gi"
+          cpu: "1000m"
+  volumes:
+    - name: my-config
+      configMap:
+        name: {{ .Release.Name }}-config

@@ -1,0 +1,221 @@
+networks:
+    fullstack-symfony-react:
+
+services:
+    # reverse proxy (required by php-fpm)
+    web: 
+        image: ${NGINX_IMAGE}
+        ports:
+            - "8080:80"
+        volumes:
+            - ./backend:/var/www/project
+            - ./build/nginx/default.conf:/etc/nginx/conf.d/default.conf
+        depends_on:
+            - app
+            - worker
+        networks:
+            - fullstack-symfony-react
+
+    # php-fpm
+    app:
+        image: ${APP_IMAGE}
+        ports:
+            - "9000:9000"
+        # not required on Windows:
+        #extra_hosts:
+            #- host.docker.internal:host-gateway
+        volumes:
+            # TODO:
+            # Enable mounting the ./backend folder in development environments!
+            # Disable mounting it when running a production build via docker compose 
+            # because the code is part of the image.
+            - ./backend:/var/www/project
+        depends_on:
+            - shared-cache
+        environment:
+            APP_ENV: ${APP_ENV}
+            APP_VERSION: ${APP_VERSION}
+            MESSENGER_TRANSPORT_DSN: "amqp://guest:guest@rabbitmq:5672/%2f/messages"
+            DATABASE_URL: "mysql://root:secret@db:3306/app?serverVersion=8.0.31&charset=utf8mb4"
+            REDIS_URL: "redis://shared-cache:6379"
+            APP_TELEMETRY: "Otel"
+            OTEL_PHP_AUTOLOAD_ENABLED: true
+            OTEL_SERVICE_NAME: backend
+            OTEL_TRACES_EXPORTER: otlp
+            OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+        networks:
+            - fullstack-symfony-react
+
+    # messenger-consume
+    # NOTE: Restart the worker after DB initialized
+    # (otherwise the worker is in an error state)
+    worker:
+        image: ${APP_IMAGE}
+        volumes:
+            # TODO:
+            # Enable mounting the ./backend folder in development environments!
+            # Disable mounting it when running a production build via docker compose 
+            # because the code is part of the image.
+            - ./backend:/var/www/project
+        command: ["bin/console", "messenger:consume", "async"]
+        depends_on:
+            - shared-cache
+        environment:
+            APP_ENV: ${APP_ENV}
+            APP_VERSION: ${APP_VERSION}
+            MESSENGER_TRANSPORT_DSN: "amqp://guest:guest@rabbitmq:5672/%2f/messages"
+            DATABASE_URL: "mysql://root:secret@db:3306/app?serverVersion=8.0.31&charset=utf8mb4"
+            REDIS_URL: "redis://shared-cache:6379"
+            APP_TELEMETRY: "Otel"
+            OTEL_PHP_AUTOLOAD_ENABLED: true
+            OTEL_SERVICE_NAME: worker
+            OTEL_TRACES_EXPORTER: otlp
+            OTEL_EXPORTER_OTLP_ENDPOINT: http://lgtm:4318
+        networks:
+            - fullstack-symfony-react
+
+    # database service
+    db:
+        image: ${MYSQL_IMAGE}
+        ports:
+            - "3306:3306"
+        volumes:
+            - mysql_data:/var/lib/mysql
+        #restart: always # always restart unless stopped manually
+        environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_PASSWORD: secret
+        healthcheck:
+            test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
+            start_period: 5s
+            interval: 5s
+            timeout: 5s
+            retries: 55
+        networks:
+            - fullstack-symfony-react
+    
+    # database frontend (to smoothen DX)
+    db-admin:
+        image: ${ADMINER_IMAGE}
+        environment:
+            ADMINER_DEFAULT_SERVER: db
+        #restart: always
+        ports:
+            - "8085:8080"
+        depends_on:
+            db:
+                condition: service_healthy
+        networks:
+            - fullstack-symfony-react
+
+    # LGTM-Stack: OTel Collector + Grafana + Loki + Tempo + Prometheus (all-in-one)
+    lgtm:
+        image: ${OTEL_LGTM_IMAGE}
+        ports:
+            - "3000:3000"   # Grafana
+            - "4317:4317"   # OTLP gRPC
+            - "4318:4318"   # OTLP HTTP
+            - "9090:9090"   # Prometheus
+        environment:
+            - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+            - GF_AUTH_ANONYMOUS_ENABLED=true
+            - GF_AUTH_BASIC_ENABLED=false
+            - GF_AUTH_DISABLE_LOGIN_FORM=true
+            - GF_FEATURE_TOGGLES_ENABLE=accessControlOnCall traceqlEditor
+        volumes:
+            - ./grafana:/otel-lgtm/grafana/conf/provisioning
+        networks:
+            - fullstack-symfony-react
+            
+    # shared cache
+    shared-cache:
+        image: ${REDIS_IMAGE}
+        ports:
+            - "6379:6379"
+        depends_on:
+            db:
+                condition: service_healthy
+        networks:
+            - fullstack-symfony-react
+
+    # shared cache admin interface
+    shared-cache-insights:
+        image: ${REDIS_INSIGHTS_IMAGE}
+        ports:
+            - "5540:5540"
+        depends_on:
+            - shared-cache
+        networks:
+            - fullstack-symfony-react
+
+    # React + Material UI frontend
+    frontend:
+        image: ${NODE_IMAGE}
+        working_dir: /app
+        volumes:
+            - ./frontend:/app
+        ports:
+            - "8090:5173"
+        environment:
+            - NODE_ENV=development
+            - BACKEND_API_URL=http://localhost:8080/api
+            - OTEL_COLLECTOR_ADDRESS=http://localhost:4318
+        networks:
+            - fullstack-symfony-react 
+        command: ["sh", "-c", "npm install && node inject.env.cjs --indexPath=./index.html && npm run dev"]
+
+    # message queue
+    rabbitmq:
+        image: ${RABBITMQ_IMAGE}
+        restart: always
+        ports:
+            - 5672:5672
+            - 15672:15672
+        environment:
+            RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+            RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+        configs:
+            - source: rabbitmq-plugins
+              target: /etc/rabbitmq/enabled_plugins
+        volumes:
+            - rabbitmq-lib:/var/lib/rabbitmq/
+            - rabbitmq-log:/var/log/rabbitmq
+        networks:
+            - fullstack-symfony-react
+
+    # documentation
+    mkdocs:
+        image: squidfunk/mkdocs-material
+        ports:
+        - "8005:8000"
+        volumes:
+        - ./mkdocs:/docs
+        stdin_open: true
+        tty: true
+        networks:
+            - fullstack-symfony-react
+
+    # developer dashboard
+    dashboard:
+        image: b4bz/homer:latest
+        volumes:
+            - ./dashboard/assets:/www/assets
+            - ./backend/report:/www/public/report
+            - ./backend/coverage:/www/public/coverage
+        ports:
+            - "8000:8080"
+        user: "1000:1001"
+        restart: unless-stopped
+        networks:
+            - fullstack-symfony-react
+
+configs:
+  rabbitmq-plugins:
+    content: "[rabbitmq_management]."
+
+volumes:
+    mysql_data: {}
+    rabbitmq-lib:
+        driver: local
+    rabbitmq-log:
+        driver: local

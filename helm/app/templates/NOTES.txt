@@ -1,0 +1,2 @@
+Access the webapp at: http://kubernetes.docker.internal:{{ .Values.frontend.nodePort }}
+Or at: http://localhost:{{ .Values.frontend.nodePort }}

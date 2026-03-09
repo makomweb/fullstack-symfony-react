@@ -1,0 +1,25 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Parameter \#1 \$environment of class App\\Kernel constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: public/index.php
+
+		-
+			message: '#^Method App\\Converter\\Converter\:\:toArray\(\) should return array\<string, mixed\> but returns array\|ArrayObject\|bool\|float\|int\|string\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Converter/Converter.php
+
+		-
+			message: '#^Property App\\Entity\\User\:\:\$id \(int\|null\) is never assigned int so it can be removed from the property type\.$#'
+			identifier: property.unusedType
+			count: 1
+			path: src/Entity/User.php
+
+		-
+			message: '#^Method App\\Game\\Games\:\:index\(\) should return array\<App\\Game\\Game\> but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Game/Games.php

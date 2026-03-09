@@ -1,0 +1,8 @@
+<?xml version="1.0"?>
+<ruleset name="MyStandard">
+    <rule ref="Generic.Metrics.CyclomaticComplexity">
+        <properties>
+            <property name="complexity" value="5"/>
+        </properties>
+    </rule>
+</ruleset>

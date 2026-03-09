@@ -1,0 +1,20 @@
+site_name: Fullstack Demo
+theme:
+  name: material
+  palette:
+    primary: blue grey
+    accent: light blue
+markdown_extensions:
+  - toc:
+      toc_depth: 4
+      permalink: true
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+extra_css:
+  - stylesheets/extra.css
+nav:
+  - Architecture: ./architecture/index.md
+

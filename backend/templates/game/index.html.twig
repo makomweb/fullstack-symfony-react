@@ -1,0 +1,70 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+
+    {% include('navbar.html.twig') %}
+
+    <div class="container">
+
+        <div class="mb-2 p-2 bg-white">
+
+            {% if games|length < 1 %}
+
+                <div class="text-center">
+                    <p>No games yet!</p>
+                </div>
+
+            {% else %}
+
+                <table class="table table-sm table-hover">
+                    <thead>
+                        <tr>
+                            <th class="text-center">Date</th>
+                            <th class="text-center">Name</th>
+                            <th class="text-center">Stats</th>
+                            <th class="text-center">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for g in games %}
+                        <tr>
+                            <td class="text-center">{{ g.dateTime|format_datetime() }}</td>
+                            <td class="text-center">{{ g.name }}</td>
+                            <td class="text-center">{{ g.stats }}</td>
+                            <td class="text-center">
+                                <form action="{{ path('app.increment_score') }}" method="post" style="display:inline;">
+                                    <input type="hidden" name="gameId" value="{{g.id}}">
+                                    <input type="hidden" name="team" value="home">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('increment_score' ~ g.id ~ 'home') }}">
+                                    <button type="submit" class="btn btn-info btn-sm mr-2">Home</button>
+                                </form>
+                                <form action="{{ path('app.increment_score') }}" method="post" style="display:inline;">
+                                    <input type="hidden" name="gameId" value="{{g.id}}">
+                                    <input type="hidden" name="team" value="guest">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('increment_score' ~ g.id ~ 'guest') }}">
+                                    <button type="submit" class="btn btn-info btn-sm mr-2">Guest</button>
+                                </form>
+                                <form action="{{ path('app.remove_game') }}" method="post" style="display:inline;">
+                                    <input type="hidden" name="gameId" value="{{ g.id }}">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('remove_game' ~ g.id) }}">
+                                    <button type="submit" class="btn btn-danger btn-sm mr-2">Remove</button>
+                                </form>
+                            </td>
+                        
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+
+            {% endif %}
+
+            <div>
+                <form action="{{ path('app.add_game') }}" method="post" style="display:inline;">
+                    <input type="hidden" name="_token" value="{{ csrf_token('add_game') }}">
+                    <button type="submit" class="btn btn-primary">Add game</button>
+                </form>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}

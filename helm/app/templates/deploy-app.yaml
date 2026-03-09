@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Release.Name }}
+  labels:
+    app: {{ .Release.Name }}
+    tier: backend
+spec:
+  replicas: {{ .Values.backend.replicas }}
+  selector:
+    matchLabels:
+      app: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Release.Name }}
+        tier: backend
+        purpose: backend
+    spec:
+      volumes:
+        - name: nginx-config-volume
+          configMap:
+            name: {{ .Release.Name }}-nginx-config
+        - name: files-volume        
+          emptyDir: {}
+      initContainers:
+      - name: copy-files
+        image: {{ .Values.backend.image }}
+        command: ["/bin/sh", "-c", "cp -r . /project/"]
+        volumeMounts:
+        - name: files-volume
+          mountPath: /project
+      - name: set-write-permissions
+        image: {{ .Values.backend.image }}
+        workingDir: /var/www/project
+        command: ["/bin/sh", "-c", "mkdir var && chmod -R 777 var/"]
+        volumeMounts:
+        - name: files-volume
+          mountPath: /var/www/project
+      containers:
+      - name: nginx
+        image: nginx
+        workingDir: /var/www/project
+        resources:
+          limits:
+            cpu: "250m"
+            memory: "500Mi"
+        volumeMounts:
+          - name: files-volume
+            mountPath: /var/www/project
+          - name: nginx-config-volume
+            mountPath: /etc/nginx/conf.d
+      - name: php
+        image: {{ .Values.backend.image }}
+        workingDir: /var/www/project
+        resources:
+          limits:
+            cpu: "250m"
+            memory: "500Mi"
+        volumeMounts:
+          - name: files-volume
+            mountPath: /var/www/project
+        envFrom:
+          - configMapRef:
+              name: {{ .Release.Name }}-config        
+        env:
+        - name: OTEL_SERVICE_NAME
+          value: "backend"
+      restartPolicy: Always

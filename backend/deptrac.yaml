@@ -1,0 +1,109 @@
+deptrac:
+  paths:
+    - ./src
+    - ./tests
+  exclude_files: ~
+    # - '#.*test.*#'
+  layers:
+    - name: Core
+      collectors:
+        - type: classLike
+          value: .*App\\Timer\\.*
+        - type: classLike
+          value: .*App\\Game\\.*
+    - name: DDD
+      collectors:
+        - type: classLike
+          value: .*PHPMolecules\\.*
+        - type: classLike
+          value: .*Tactix\\.*
+    - name: Invariant
+      collectors:
+        - type: classLike
+          value: .*App\\Invariant\\.*
+    - name: Generic
+      collectors:
+        - type: classLike
+          value: .*AutoMapper\\.*
+        - type: classLike
+          value: .*Doctrine\\.*
+        - type: classLike
+          value: .*EasyCorp\\Bundle\\EasyAdminBundle\\.*
+        - type: classLike
+          value: .*Faker\\Factory.*
+        - type: classLike
+          value: .*Monolog\\.*
+        - type: classLike
+          value: .*OpenApi\\Attributes\\.*
+        - type: classLike
+          value: .*OpenTelemetry\\.*
+        - type: classLike
+          value: .*phpDocumentor\\Reflection\\.*
+        - type: classLike
+          value: .*PhpParser\\.*
+        - type: classLike
+          value: .*Psr\\.*
+        - type: classLike
+          value: .*Symfony\\.*
+    - name: Supporting
+      collectors:
+        - type: classLike
+          value: .*App\\Auth\\.*
+        - type: classLike
+          value: .*App\\Cache\\.*
+        - type: classLike
+          value: .*App\\CloudEvent\\.*
+        - type: classLike
+          value: .*App\\Controller\\.*
+        - type: classLike
+          value: .*App\\Converter\\.*
+        - type: classLike
+          value: .*App\\DataFixtures\\.*
+        - type: bool
+          must:
+            - type: classLike
+              value: .*App\\DDD\\.*
+          must_not:
+            - type: classLike
+              value: .*App\\DDD\\Tactical\\Attribute\\.*
+        - type: classLike
+          value: .*App\\Entity\\.*
+        - type: classLike
+          value: .*App\\Instrumentation\\.*
+        - type: classLike
+          value: .*App\\Listener\\.*
+        - type: classLike
+          value: .*App\\Message\\.*
+        - type: classLike
+          value: .*App\\Repository\\.*
+    - name: Tests
+      collectors:
+        - type: classLike
+          value: .*App\\Tests\\.*
+        - type: classLike
+          value: .*PHPUnit\\Framework\\.*
+  ruleset:
+    Invariant: ~
+    Generic:
+      - Invariant
+    DDD:
+      - Invariant
+      - Generic
+    Core:
+      - DDD
+      - Invariant
+    Supporting:
+      - Core
+      - DDD
+      - Generic
+      - Invariant
+    Tactical:
+      - Invariant
+      - Generic
+    Tests:
+      - Core
+      - DDD
+      - Invariant
+      - Tactical
+      - Generic
+      - Supporting

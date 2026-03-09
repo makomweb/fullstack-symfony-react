@@ -1,0 +1,10 @@
+.git
+.gitignore
+backend/.phpunit.result.cache
+backend/.phpunit.cache
+backend/.php-cs-fixer.cache
+backend/.deptrac.cache
+backend/diagram.*
+backend/coverage/
+backend/vendor/
+backend/var/

@@ -1,0 +1,18 @@
+# LGTM Stack Configuration
+lgtm:
+  # All-in-one image includes: Grafana, Loki, Tempo, Prometheus, OpenTelemetry Collector
+  image: grafana/otel-lgtm:0.8.1
+  
+  # Services
+  services:
+    name: lgtm
+  
+  # Port Mappings
+  ports:
+    grafana: 3000
+    otelGrpc: 4317
+    otelHttp: 4318
+    prometheus: 9090
+  
+  # Node Port for external access
+  nodePort: 30300

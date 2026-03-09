@@ -1,0 +1,33 @@
+monolog:
+    channels: ['trace']
+    handlers: []
+
+when@dev:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: php://stderr
+                level: info
+                channels: ["!event", "!doctrine"]
+                formatter: App\Instrumentation\Stdout\CustomLineFormatter
+            opentelemetry:
+                type: service
+                id: App\Instrumentation\Otel\ProcessingHandler
+                level: debug
+                channels: ["!event", "!doctrine"]
+
+when@prod:
+    monolog:
+        handlers:
+            main:
+                type: stream
+                path: php://stderr
+                level: info
+                channels: ["!event", "!doctrine"]
+                formatter: App\Instrumentation\Stdout\CustomLineFormatter
+            opentelemetry:
+                type: service
+                id: App\Instrumentation\Otel\ProcessingHandler
+                level: debug
+                channels: ["!event", "!doctrine"]

@@ -1,0 +1,31 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Game;
+
+use PHPMolecules\DDD\Attribute\ValueObject;
+
+/**
+ * Options to query the event store.
+ */
+#[ValueObject]
+final readonly class QueryOptions
+{
+    /**
+     * @param string[] $subjectTypes
+     * @param string[] $subjectIds
+     * @param string[] $eventTypes
+     */
+    public function __construct(
+        public array $subjectTypes = [],
+        public array $subjectIds = [],
+        public array $eventTypes = [],
+    ) {
+    }
+
+    public function isEmpty(): bool
+    {
+        return empty($this->subjectTypes) && empty($this->subjectIds) && empty($this->eventTypes);
+    }
+}
