@@ -56,7 +56,7 @@ services:
       - name: "Source code"
         subtitle: "Github"
         icon: "fa-brands fa-github"
-        url: "https://github.com/makomweb/fullstack-demo"
+        url: "https://github.com/makomweb/fullstack-symfony-react"
         target: "_blank"
       - name: "Architecture Documentation"
         subtitle: "MKDocs"

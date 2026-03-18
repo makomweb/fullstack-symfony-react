@@ -1,5 +1,5 @@
 # Build-Stage
-FROM node:23-alpine AS build
+FROM node:25.2-alpine AS build
 
 WORKDIR /app
 
@@ -24,7 +24,7 @@ COPY frontend/vitest.config.ts .
 RUN npm run build
 
 # Produktions-Stage
-FROM node:23-alpine AS prod
+FROM node:25.2-alpine AS prod
 
 WORKDIR /app
 

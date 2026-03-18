@@ -7,25 +7,27 @@ VERSION = 0.9.1
 	reset-worker reset-app init composer-install create-database create-schema \
 	load-fixtures init-test create-test-database create-test-schema composer shell \
 	qa sa cs test backend-test frontend-test arch clear cache-clear cache-pool-clear \
-	build-viz svg build-dot build-svg circle maintenance maintain show-composer-updates \
+	maintenance maintain show-composer-updates \
 	update-composer-dependencies update-npm-dependencies coverage frontend-shell open help
 
 ## Start development environment (build images, start containers, init, open browser)
 start: dev grafana up init open
 
-## Build development Docker image
+build: dev prod
+
+## Build development Docker image (with Docker cache)
 dev:
 	docker build . -f ./build/php/Dockerfile --target dev -t ${APP_NAME}-dev:${VERSION}
 	
-## Build production images
+## Build production images (without Docker cache)
 prod: backend-image frontend-image
 
-## Build backend image
+## Build backend image (without Docker cache)
 backend-image:
 	@echo "Build backend image"
 	docker build . -f ./build/php/Dockerfile --target prod --no-cache -t ${APP_NAME}:${VERSION}
 
-## Build frontend image
+## Build frontend image (without Docker cache)
 frontend-image:
 	@echo "Build frontend image"
 	docker build . -f ./build/node/Dockerfile --target prod --no-cache -t ${APP_NAME}-web:${VERSION}
