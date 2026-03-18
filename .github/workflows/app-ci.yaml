@@ -59,7 +59,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: ['v23.11']
+        node-version: ['v25.8']
 
     steps:
       - uses: actions/checkout@v4
