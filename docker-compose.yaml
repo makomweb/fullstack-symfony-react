@@ -185,7 +185,7 @@ services:
 
     # documentation
     mkdocs:
-        image: squidfunk/mkdocs-material
+        image: ${MK_DOCS_IMAGE}
         ports:
         - "8005:8000"
         volumes:
@@ -197,7 +197,7 @@ services:
 
     # developer dashboard
     dashboard:
-        image: b4bz/homer:latest
+        image: ${DASHBOARD_IMAGE}
         volumes:
             - ./dashboard/assets:/www/assets
             - ./backend/report:/www/public/report
