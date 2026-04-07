@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Message;
+namespace App\Async;
 
 use App\Game\Instrumentation\LoggingInterface;
 use App\Game\Instrumentation\MetricsInterface;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Message;
+namespace App\Async;
 
 use App\Entity\Event;
 use OpenTelemetry\API\Trace\Propagation\TraceContextPropagator;

@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace App\Listener;
 
+use App\Async\EventPersisted;
 use App\Entity\Event as EventEntity;
-use App\Message\EventPersisted;
 use Doctrine\Bundle\DoctrineBundle\Attribute\AsEntityListener;
 use Doctrine\ORM\Event\PostPersistEventArgs;
 use Doctrine\ORM\Events;

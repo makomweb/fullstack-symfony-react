@@ -48,6 +48,8 @@ deptrac:
     - name: Supporting
       collectors:
         - type: classLike
+          value: .*App\\Async\\.*
+        - type: classLike
           value: .*App\\Auth\\.*
         - type: classLike
           value: .*App\\Cache\\.*
@@ -72,8 +74,6 @@ deptrac:
           value: .*App\\Instrumentation\\.*
         - type: classLike
           value: .*App\\Listener\\.*
-        - type: classLike
-          value: .*App\\Message\\.*
         - type: classLike
           value: .*App\\Repository\\.*
     - name: Tests
