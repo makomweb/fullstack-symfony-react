@@ -9,8 +9,9 @@ import "@fontsource/roboto/700.css";
 import { setupOTelSDK, setupFetchInstrumentation } from "@makomweb/otel-sdk-react";
 import { BACKEND_API_URL } from "./config/env.ts";
 
-// Initialize OTEL infrastructure
-setupOTelSDK();
+// Initialize OTEL infrastructure with explicit collector address
+const collectorAddress = (window as any).OTEL_COLLECTOR_ADDRESS || "http://localhost:4318";
+setupOTelSDK(collectorAddress);
 
 // Set up application-specific fetch tracing with backend URL
 setupFetchInstrumentation(BACKEND_API_URL);
