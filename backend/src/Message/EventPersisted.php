@@ -9,44 +9,38 @@ use OpenTelemetry\API\Trace\Propagation\TraceContextPropagator;
 use Symfony\Component\Messenger\Attribute\AsMessage;
 
 #[AsMessage(transport: 'async')]
-final class EventPersisted
+final readonly class EventPersisted
 {
-    /** @var array<string,string> */
-    private array $traceContext;
-
+    /** @param array<string,string> $traceContext */
     private function __construct(
-        public readonly Event $event,
-        public readonly float $createdAt,
+        public Event $event,
+        public float $createdAt,
+        public array $traceContext,
     ) {
-        $this->traceContext = [];
     }
 
     public static function fromEvent(Event $event): self
     {
-        $obj = new self($event, microtime(true));
-
-        self::addTraceContext($obj);
-
-        return $obj;
+        return new self(
+            $event,
+            microtime(true),
+            self::provideTraceContext()
+        );
     }
 
     /** @return array<string,string> */
-    public function getTraceContext(): array
+    private static function provideTraceContext(): array
     {
-        return $this->traceContext;
-    }
+        $carrier = [];
 
-    private static function addTraceContext(self $message): void
-    {
-        $traceContext = [];
+        TraceContextPropagator::getInstance()->inject($carrier);
+        assert(is_array($carrier));
 
-        TraceContextPropagator::getInstance()->inject($traceContext);
-        assert(is_array($traceContext));
-
-        foreach ($traceContext as $key => $value) {
+        foreach ($carrier as $key => $value) {
             assert(is_string($key));
             assert(is_string($value));
-            $message->traceContext[$key] = $value;
         }
+
+        return $carrier; // @phpstan-ignore return.type
     }
 }

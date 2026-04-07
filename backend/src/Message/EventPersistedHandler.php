@@ -28,7 +28,7 @@ final readonly class EventPersistedHandler
     private function tryHandle(EventPersisted $message): void
     {
         $tracer = $this->tracing
-            ->createTracer(__METHOD__, __FILE__, $message->getTraceContext());
+            ->createTracer(__METHOD__, __FILE__, $message->traceContext);
 
         try {
             $this->handle($message);
