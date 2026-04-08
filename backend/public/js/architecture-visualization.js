@@ -154,9 +154,10 @@ class ArchitectureVisualization {
                 if (!targetPos) return;
                 
                 // Use different angles for each dependency to spread them out
+                // Add 22.5 degree offset to avoid 12 o'clock position where labels are
                 const depCount = deps.length;
                 const depIndex = deps.indexOf(targetLayerName);
-                const angle = (depIndex * (360 / depCount)) - 90; // Spread evenly around circle
+                const angle = (depIndex * (360 / depCount)) - 90 + 22.5; // Offset to avoid label overlap
                 const angleRad = (angle * Math.PI) / 180;
                 
                 // Start point: at midRadius of source layer
