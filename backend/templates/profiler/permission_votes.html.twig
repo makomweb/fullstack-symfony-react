@@ -1,15 +1,15 @@
-{# templates/profiler/permission_voter_collector.html.twig #}
+{# templates/profiler/permission_votes.html.twig #}
 {% extends '@WebProfiler/Profiler/layout.html.twig' %}
 
 {% block toolbar %}
     {% set icon %}
-        <span class="icon">{{ include('profiler/icon.svg') }}</span>
+        {{ include('profiler/lock.svg') }}
         <span class="sf-toolbar-value">{{ collector.voterCalls|length }}</span>
     {% endset %}
 
     {% set text %}
         <div class="sf-toolbar-info-piece">
-            <b>Voter Calls</b>
+            <b>Permission votes</b>
             <span>{{ collector.voterCalls|length }}</span>
         </div>
     {% endset %}
@@ -19,18 +19,18 @@
 
 {% block menu %}
     <span class="label">
-        <span class="icon">{{ include('profiler/icon.svg') }}</span>
-        <strong>Voter</strong>
+        {{ include('profiler/lock.svg') }}
+        <strong>Votes</strong>
         <span class="count">{{ collector.voterCalls|length }}</span>
     </span>
 {% endblock %}
 
 {% block panel %}
-    <h2>PermissionVoter Calls</h2>
+    <h2>Permission votes</h2>
 
     {% if collector.voterCalls is empty %}
         <div class="empty">
-            <p>No calls to PermissionVoter during this request.</p>
+            <p>No votes yet.</p>
         </div>
     {% else %}
         <table class="alt">

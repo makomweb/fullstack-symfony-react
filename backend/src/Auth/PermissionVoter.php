@@ -5,7 +5,7 @@ declare(strict_types=1);
 namespace App\Auth;
 
 use App\Game\CurrentUserInterface;
-use App\Instrumentation\DataCollector\PermissionVoterCollector;
+use App\Instrumentation\DataCollector\PermissionVotesCollector;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Authorization\Voter\Vote;
 use Symfony\Component\Security\Core\Authorization\Voter\Voter;
@@ -17,7 +17,7 @@ final class PermissionVoter extends Voter
 {
     public function __construct(
         private readonly CurrentUserInterface $currentUser,
-        private readonly PermissionVoterCollector $collector,
+        private readonly PermissionVotesCollector $collector,
     ) {
     }
 

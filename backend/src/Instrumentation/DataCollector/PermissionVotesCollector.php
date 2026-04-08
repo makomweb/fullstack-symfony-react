@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
 
-class PermissionVoterCollector extends DataCollector
+class PermissionVotesCollector extends DataCollector
 {
     public function addVoterCall(string $attribute, mixed $subject, bool $hasPermission): void
     {
@@ -98,6 +98,6 @@ class PermissionVoterCollector extends DataCollector
 
     public function getName(): string
     {
-        return 'app.permission_voter_collector';
+        return 'app.permission_votes_collector';
     }
 }

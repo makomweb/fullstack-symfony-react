@@ -41,9 +41,9 @@ services:
     App\Auth\Permissions:
         arguments: ['%kernel.project_dir%', 'config/permissions.yaml']
 
-    App\Instrumentation\DataCollector\PermissionVoterCollector:
+    App\Instrumentation\DataCollector\PermissionVotesCollector:
         tags:
-            - { name: data_collector, template: 'profiler/permission_voter_collector.html.twig', id: 'app.permission_voter_collector' }
+            - { name: data_collector, template: 'profiler/permission_votes.html.twig', id: 'app.permission_votes_collector' }
 
     App\Instrumentation\DataCollector\ArchitectureCollector:
         arguments:
