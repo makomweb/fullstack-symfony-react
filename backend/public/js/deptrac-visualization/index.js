@@ -86,10 +86,10 @@ class DeptracVisualization {
 
     _getColorPalette() {
         return {
-            'Core': { fill: '#8B1A1A', stroke: '#5C0A0A', text: '#ffffff' },
-            'Supporting': { fill: '#1B8A7E', stroke: '#0F5F57', text: '#ffffff' },
-            'Generic': { fill: '#0066CC', stroke: '#003D99', text: '#ffffff' },
-            'Tests': { fill: '#FF6B35', stroke: '#CC5529', text: '#ffffff' }
+            'Core': { fill: '#C9A2A2', stroke: '#9E7777', text: '#ffffff' },
+            'Supporting': { fill: '#7DB5AA', stroke: '#5F9A8C', text: '#ffffff' },
+            'Generic': { fill: '#6BA3D4', stroke: '#4E7FA3', text: '#ffffff' },
+            'Tests': { fill: '#E8A968', stroke: '#D08842', text: '#ffffff' }
         };
     }
 
