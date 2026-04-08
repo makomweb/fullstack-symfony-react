@@ -79,5 +79,4 @@ deptrac:
       - Generic
     Tests:
       - Core
-      - Generic
       - Supporting

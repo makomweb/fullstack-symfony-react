@@ -44,13 +44,13 @@ class ArchitectureVisualization {
         
         const availableRadius = Math.min(this.width, this.height) / 2 - this.margin;
         
-        // Layer order: semantic onion with adapters between core and infrastructure
-        // Core → Supporting → Generic → Tests (innermost to outermost)
+        // Layer order: semantic onion with tests as application layer
+        // Core → Supporting → Tests → Generic (innermost to outermost)
         // Core: business logic (no deps)
         // Supporting: adapters (depends on Core, uses Generic)
-        // Generic: external frameworks (infrastructure)
-        // Tests: test layer (can depend on all)
-        const layerOrder = ['Core', 'Supporting', 'Generic', 'Tests'];
+        // Tests: application test layer (depends on Core, Supporting)
+        // Generic: external frameworks (infrastructure, outermost)
+        const layerOrder = ['Core', 'Supporting', 'Tests', 'Generic'];
         const sortedLayers = layerOrder
             .filter(name => layers[name])
             .map(name => ({ name, ...layers[name] }));
