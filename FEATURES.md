@@ -42,6 +42,7 @@
 - ✅ Authorization
     - ✅ check permissions (configured in YAML) via Symfony voter
 - ✅ arc42 documentation template
+- ✅ add architecture visualization to Symfony Profiler
 
 ## Planned
 
@@ -56,4 +57,3 @@
     - ❌ Provision Grafana dashboard, e.g. via ConfigMap
     - ❌ Deploy DB via stateful set
 - ❌ Include Alpine image into Docker multistage build for production
-

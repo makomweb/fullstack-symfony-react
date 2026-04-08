@@ -1,0 +1,75 @@
+{# templates/profiler/architecture.html.twig #}
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        {{ include('profiler/skyscraper.svg') }}
+        <span class="sf-toolbar-value">{{ collector.details.layers|length }}</span>
+    {% endset %}
+
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b>Architecture</b>
+            <span>{{ collector.details.layers|length }} layers</span>
+        </div>
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true, icon: icon, text: text }) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        {{ include('profiler/skyscraper.svg') }}
+        <strong>Architecture</strong>
+        <span class="count">{{ collector.details.layers|length }}</span>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Architecture</h2>
+    
+    {% if collector.details.layers is empty %}
+        <div class="empty">
+            <p>No architecture data available. Check that deptrac.yaml is properly configured.</p>
+        </div>
+    {% else %}
+        <div>
+            <div id="architecture-visualization"></div>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <h3>Layer</h3>
+            <table class="alt">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Can Depend On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for layer, info in collector.details.layers %}
+                        <tr>
+                            <td><strong>{{ layer }}</strong></td>
+                            <td>
+                                {% if collector.details.dependencies[layer] is defined %}
+                                    {{ collector.details.dependencies[layer]|join(', ') }}
+                                {% else %}
+                                    <em>None</em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <script src="/js/deptrac-visualization/index.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const architectureData = {{ collector.details|json_encode|raw }};
+                new DeptracVisualization('architecture-visualization', architectureData);
+            });
+        </script>
+    {% endif %}
+{% endblock %}
+
