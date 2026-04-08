@@ -3,7 +3,7 @@
 
 {% block toolbar %}
     {% set icon %}
-        <span class="icon">{{ include('profiler/icon.svg') }}</span>
+        {{ include('profiler/icon.svg') }}
         <span class="sf-toolbar-value">{{ collector.voterCalls|length }}</span>
     {% endset %}
 
@@ -19,7 +19,7 @@
 
 {% block menu %}
     <span class="label">
-        <span class="icon">{{ include('profiler/icon.svg') }}</span>
+        {{ include('profiler/icon.svg') }}
         <strong>Voter</strong>
         <span class="count">{{ collector.voterCalls|length }}</span>
     </span>
