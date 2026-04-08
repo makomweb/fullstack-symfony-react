@@ -8,19 +8,7 @@ deptrac:
     - name: Core
       collectors:
         - type: classLike
-          value: .*App\\Timer\\.*
-        - type: classLike
           value: .*App\\Game\\.*
-    - name: DDD
-      collectors:
-        - type: classLike
-          value: .*PHPMolecules\\.*
-        - type: classLike
-          value: .*Tactix\\.*
-    - name: Invariant
-      collectors:
-        - type: classLike
-          value: .*App\\Invariant\\.*
     - name: Generic
       collectors:
         - type: classLike
@@ -42,9 +30,13 @@ deptrac:
         - type: classLike
           value: .*PhpParser\\.*
         - type: classLike
+          value: .*PHPUnit\\Framework\\.*
+        - type: classLike
           value: .*Psr\\.*
         - type: classLike
           value: .*Symfony\\.*
+        - type: classLike
+          value: .*Tactix\\.*
     - name: Supporting
       collectors:
         - type: classLike
@@ -61,13 +53,6 @@ deptrac:
           value: .*App\\Converter\\.*
         - type: classLike
           value: .*App\\DataFixtures\\.*
-        - type: bool
-          must:
-            - type: classLike
-              value: .*App\\DDD\\.*
-          must_not:
-            - type: classLike
-              value: .*App\\DDD\\Tactical\\Attribute\\.*
         - type: classLike
           value: .*App\\Entity\\.*
         - type: classLike
@@ -80,30 +65,25 @@ deptrac:
       collectors:
         - type: classLike
           value: .*App\\Tests\\.*
+    - name: Utilities
+      collectors:
         - type: classLike
-          value: .*PHPUnit\\Framework\\.*
+          value: .*App\\Invariant\\.*
+        - type: classLike
+          value: .*PHPMolecules\\.*
+        - type: classLike
+          value: .*App\\Timer\\.*
   ruleset:
-    Invariant: ~
-    Generic:
-      - Invariant
-    DDD:
-      - Invariant
-      - Generic
     Core:
-      - DDD
-      - Invariant
+      - Utilities
+    Generic: ~
     Supporting:
       - Core
-      - DDD
       - Generic
-      - Invariant
-    Tactical:
-      - Invariant
-      - Generic
+      - Utilities
     Tests:
       - Core
-      - DDD
-      - Invariant
-      - Tactical
       - Generic
       - Supporting
+      - Utilities
+    Utilities: ~
