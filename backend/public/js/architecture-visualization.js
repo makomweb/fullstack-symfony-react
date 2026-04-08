@@ -37,7 +37,15 @@ class ArchitectureVisualization {
         const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
         svg.setAttribute('width', this.width);
         svg.setAttribute('height', this.height);
-        svg.setAttribute('style', 'border: 1px solid #ddd; border-radius: 4px; background: linear-gradient(135deg, #f9f9f9 0%, #ffffff 100%);');
+        svg.setAttribute('style', 'display: block;');
+        svg.setAttribute('viewBox', `0 0 ${this.width} ${this.height}`);
+        
+        // Add background
+        const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
+        bg.setAttribute('width', this.width);
+        bg.setAttribute('height', this.height);
+        bg.setAttribute('fill', 'white');
+        svg.appendChild(bg);
         
         // Define arrow markers for different angles
         this.addArrowMarkers(svg);
