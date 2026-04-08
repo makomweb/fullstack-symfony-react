@@ -85,7 +85,7 @@
           "includeNullMetadata": true,
           "instant": true,
           "interval": "",
-          "legendFormat": "Command executed (ms)",
+          "legendFormat": "Executed (ms)",
           "range": false,
           "refId": "Command executed (ms)",
           "useBackend": false
@@ -103,7 +103,7 @@
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": true,
-          "legendFormat": "Command executed (ms)",
+          "legendFormat": "Handled (ms)",
           "range": false,
           "refId": "Message handled (ms)",
           "useBackend": false
