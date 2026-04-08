@@ -44,3 +44,9 @@ services:
     App\Instrumentation\DataCollector\PermissionVoterCollector:
         tags:
             - { name: data_collector, template: 'profiler/permission_voter_collector.html.twig', id: 'app.permission_voter_collector' }
+
+    App\Instrumentation\DataCollector\ArchitectureCollector:
+        arguments:
+            - '%kernel.project_dir%'
+        tags:
+            - { name: data_collector, template: 'profiler/architecture.html.twig', id: 'app.architecture_collector' }

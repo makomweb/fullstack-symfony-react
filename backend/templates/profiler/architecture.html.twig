@@ -4,13 +4,13 @@
 {% block toolbar %}
     {% set icon %}
         {{ include('profiler/skyscraper.svg') }}
-        <span class="sf-toolbar-value">{{ collector.details|length }}</span>
+        <span class="sf-toolbar-value">{{ collector.details.layers|length }}</span>
     {% endset %}
 
     {% set text %}
         <div class="sf-toolbar-info-piece">
             <b>Architecture</b>
-            <span>{{ collector.details|length }}</span>
+            <span>{{ collector.details.layers|length }} layers</span>
         </div>
     {% endset %}
 
@@ -21,13 +21,58 @@
     <span class="label">
         {{ include('profiler/skyscraper.svg') }}
         <strong>Architecture</strong>
-        <span class="count">{{ collector.details|length }}</span>
+        <span class="count">{{ collector.details.layers|length }}</span>
     </span>
 {% endblock %}
 
 {% block panel %}
-    <h2>Architecture</h2>
-    <div class="empty">
-        <p>No details yet.</p>
-    </div>
+    <h2>Architecture Visualization</h2>
+    
+    {% if collector.details.layers is empty %}
+        <div class="empty">
+            <p>No architecture data available. Check that deptrac.yaml is properly configured.</p>
+        </div>
+    {% else %}
+        <div style="margin: 20px 0;">
+            <h3>Onion Architecture Layers</h3>
+            <div id="architecture-visualization" style="max-width: 800px; margin: 20px auto;"></div>
+        </div>
+        
+        <div style="margin-top: 30px;">
+            <h3>Layer Information</h3>
+            <table class="alt">
+                <thead>
+                    <tr>
+                        <th>Layer</th>
+                        <th>Position</th>
+                        <th>Can Depend On</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for layer, info in collector.details.layers %}
+                        <tr>
+                            <td><strong>{{ layer }}</strong></td>
+                            <td>{{ info.position }}</td>
+                            <td>
+                                {% if collector.details.dependencies[layer] is defined %}
+                                    {{ collector.details.dependencies[layer]|join(', ') }}
+                                {% else %}
+                                    <em>None</em>
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        
+        <script src="/js/architecture-visualization.js"></script>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const architectureData = {{ collector.details|json_encode|raw }};
+                new ArchitectureVisualization('architecture-visualization', architectureData);
+            });
+        </script>
+    {% endif %}
 {% endblock %}
+

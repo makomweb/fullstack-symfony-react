@@ -9,6 +9,12 @@ deptrac:
       collectors:
         - type: classLike
           value: .*App\\Game\\.*
+        - type: classLike
+          value: .*App\\Invariant\\.*
+        - type: classLike
+          value: .*PHPMolecules\\.*
+        - type: classLike
+          value: .*App\\Timer\\.*
     - name: Generic
       collectors:
         - type: classLike
@@ -65,25 +71,13 @@ deptrac:
       collectors:
         - type: classLike
           value: .*App\\Tests\\.*
-    - name: Utilities
-      collectors:
-        - type: classLike
-          value: .*App\\Invariant\\.*
-        - type: classLike
-          value: .*PHPMolecules\\.*
-        - type: classLike
-          value: .*App\\Timer\\.*
   ruleset:
-    Core:
-      - Utilities
+    Core: ~
     Generic: ~
     Supporting:
       - Core
       - Generic
-      - Utilities
     Tests:
       - Core
       - Generic
       - Supporting
-      - Utilities
-    Utilities: ~
