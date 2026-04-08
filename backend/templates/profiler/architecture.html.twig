@@ -26,7 +26,7 @@
 {% endblock %}
 
 {% block panel %}
-    <h2>Architecture Visualization</h2>
+    <h2>Architecture</h2>
     
     {% if collector.details.layers is empty %}
         <div class="empty">
@@ -38,12 +38,11 @@
         </div>
         
         <div style="margin-top: 30px;">
-            <h3>Layer Information</h3>
+            <h3>Layer</h3>
             <table class="alt">
                 <thead>
                     <tr>
-                        <th>Layer</th>
-                        <th>Position</th>
+                        <th>Name</th>
                         <th>Can Depend On</th>
                     </tr>
                 </thead>
@@ -51,7 +50,6 @@
                     {% for layer, info in collector.details.layers %}
                         <tr>
                             <td><strong>{{ layer }}</strong></td>
-                            <td>{{ info.position }}</td>
                             <td>
                                 {% if collector.details.dependencies[layer] is defined %}
                                     {{ collector.details.dependencies[layer]|join(', ') }}
