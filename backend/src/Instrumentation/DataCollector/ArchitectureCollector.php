@@ -33,8 +33,10 @@ class ArchitectureCollector extends DataCollector
      */
     public function getDetails(): array
     {
-        assert(is_array($this->data));
-        return $this->data;
+        /** @var array{layers: array<string, array{name: string, position: int}>, dependencies: array<string, array<string>>} $data */
+        $data = $this->data;
+
+        return $data;
     }
 
     /**
@@ -42,7 +44,7 @@ class ArchitectureCollector extends DataCollector
      */
     private function parseDeptracConfig(): array
     {
-        $deptracPath = $this->projectDir . '/deptrac.yaml';
+        $deptracPath = $this->projectDir.'/deptrac.yaml';
 
         if (!file_exists($deptracPath)) {
             return ['layers' => [], 'dependencies' => []];
@@ -50,7 +52,7 @@ class ArchitectureCollector extends DataCollector
 
         $config = Yaml::parseFile($deptracPath);
 
-        if (!isset($config['deptrac']) || !is_array($config['deptrac'])) {
+        if (!is_array($config) || !isset($config['deptrac']) || !is_array($config['deptrac'])) {
             return ['layers' => [], 'dependencies' => []];
         }
 
@@ -60,7 +62,7 @@ class ArchitectureCollector extends DataCollector
         if (isset($deptracConfig['layers']) && is_array($deptracConfig['layers'])) {
             $position = 0;
             foreach ($deptracConfig['layers'] as $layer) {
-                if (isset($layer['name']) && is_string($layer['name'])) {
+                if (is_array($layer) && isset($layer['name']) && is_string($layer['name'])) {
                     $layers[$layer['name']] = [
                         'name' => $layer['name'],
                         'position' => $position++,
@@ -72,10 +74,13 @@ class ArchitectureCollector extends DataCollector
         $dependencies = [];
         if (isset($deptracConfig['ruleset']) && is_array($deptracConfig['ruleset'])) {
             foreach ($deptracConfig['ruleset'] as $layer => $allowedDependencies) {
-                if (!is_array($allowedDependencies)) {
-                    $allowedDependencies = [];
+                if (is_string($layer)) {
+                    $deps = [];
+                    if (is_array($allowedDependencies)) {
+                        $deps = array_values(array_filter($allowedDependencies, 'is_string'));
+                    }
+                    $dependencies[$layer] = $deps;
                 }
-                $dependencies[$layer] = array_values(array_filter($allowedDependencies, 'is_string'));
             }
         }
 
