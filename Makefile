@@ -191,3 +191,8 @@ open:
 help:
 	@echo "Available targets:"
 	@awk '/^## / {desc=$$0; sub(/^## /, "", desc); getline; if(match($$0, /^([a-zA-Z0-9_-]+):/)) {printf "  %-20s %s\n", substr($$0, RSTART, RLENGTH-1), desc}}' $(MAKEFILE_LIST)
+
+## Synchronize deptrac visualization JavaScript code
+sync-deptrac-visualization:
+	cp backend/assets/js/deptrac-visualization/index.js \
+		backend/public/js/deptrac-visualization/index.js

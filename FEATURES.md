@@ -42,6 +42,7 @@
 - ✅ Authorization
     - ✅ check permissions (configured in YAML) via Symfony voter
 - ✅ arc42 documentation template
+- ✅ add architecture visualization to Symfony Profiler
 
 ## Planned
 
@@ -56,13 +57,3 @@
     - ❌ Provision Grafana dashboard, e.g. via ConfigMap
     - ❌ Deploy DB via stateful set
 - ❌ Include Alpine image into Docker multistage build for production
-
-## Feature: architecture visualization
-
-- requirements:
-    - analyze deptrac.yaml and identify proper onion architecture
-    - use deptrac.yaml information to visualize a proper image on the HTML (render TWIG backend/templates/profiler/architecture.html.twig)
-    - draw a comprehensible and nice looking onion or hexagonal architecture visualization
-    - use JavaScript for the drawing (canvas or whatever fits best, suggest something!)
-    - come up with an MVP which implements a technical spike - does not have to be complete but uses the existing Symfony Profiler and the surroundings which are already there
-    
