@@ -149,41 +149,33 @@ class ArchitectureVisualization {
             
             if (!deps || deps.length === 0) return;
             
-            // Spread arrows around the circle to avoid overlap
-            const startAngle = -90; // Start at top
-            const angleStep = 360 / (deps.length + 1);
-            
-            deps.forEach((targetLayerName, depIndex) => {
+            deps.forEach((targetLayerName) => {
                 const targetPos = layerPositions[targetLayerName];
                 if (!targetPos) return;
                 
-                // Calculate angle for this arrow
-                const angle = startAngle + (depIndex + 1) * angleStep;
+                // Use different angles for each dependency to spread them out
+                const depCount = deps.length;
+                const depIndex = deps.indexOf(targetLayerName);
+                const angle = (depIndex * (360 / depCount)) - 90; // Spread evenly around circle
                 const angleRad = (angle * Math.PI) / 180;
                 
-                // Start point: at outer edge of source layer
-                const startRadius = sourcePos.outerRadius + 5;
+                // Start point: at midRadius of source layer
+                const startRadius = sourcePos.midRadius;
                 const startX = this.centerX + Math.cos(angleRad) * startRadius;
                 const startY = this.centerY + Math.sin(angleRad) * startRadius;
                 
-                // End point: at outer edge of target layer
-                const endRadius = targetPos.outerRadius + 5;
+                // End point: at midRadius of target layer
+                const endRadius = targetPos.midRadius;
                 const endX = this.centerX + Math.cos(angleRad) * endRadius;
                 const endY = this.centerY + Math.sin(angleRad) * endRadius;
                 
-                // Draw curved arrow (quadratic bezier)
-                const controlRadius = Math.max(startRadius, endRadius) + 100;
-                const controlX = this.centerX + Math.cos(angleRad) * controlRadius;
-                const controlY = this.centerY + Math.sin(angleRad) * controlRadius;
-                
+                // Draw simple line arrow from source to target
                 const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
-                const pathData = `M ${startX} ${startY} Q ${controlX} ${controlY} ${endX} ${endY}`;
+                const pathData = `M ${startX} ${startY} L ${endX} ${endY}`;
                 path.setAttribute('d', pathData);
                 path.setAttribute('fill', 'none');
-                path.setAttribute('stroke', '#999');
+                path.setAttribute('stroke', '#333');
                 path.setAttribute('stroke-width', '2');
-                path.setAttribute('stroke-dasharray', '5,5');
-                path.setAttribute('opacity', '0.6');
                 path.setAttribute('marker-end', 'url(#arrowhead)');
                 svg.appendChild(path);
             });
