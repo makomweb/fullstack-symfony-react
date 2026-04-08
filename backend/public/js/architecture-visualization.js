@@ -44,10 +44,13 @@ class ArchitectureVisualization {
         
         const availableRadius = Math.min(this.width, this.height) / 2 - this.margin;
         
-        // Layer order: alphabetical for consistent ordering, with arrows pointing inward
-        // Core → Generic → Supporting → Tests (innermost to outermost)
-        // This ensures all arrows point from outer layers towards inner dependencies
-        const layerOrder = ['Core', 'Generic', 'Supporting', 'Tests'];
+        // Layer order: semantic onion with adapters between core and infrastructure
+        // Core → Supporting → Generic → Tests (innermost to outermost)
+        // Core: business logic (no deps)
+        // Supporting: adapters (depends on Core, uses Generic)
+        // Generic: external frameworks (infrastructure)
+        // Tests: test layer (can depend on all)
+        const layerOrder = ['Core', 'Supporting', 'Generic', 'Tests'];
         const sortedLayers = layerOrder
             .filter(name => layers[name])
             .map(name => ({ name, ...layers[name] }));
