@@ -7,6 +7,7 @@ namespace App\Instrumentation\DataCollector;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\DataCollector\DataCollector;
+use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
 class ArchitectureCollector extends DataCollector
@@ -50,7 +51,11 @@ class ArchitectureCollector extends DataCollector
             return ['layers' => [], 'dependencies' => []];
         }
 
-        $config = Yaml::parseFile($deptracPath);
+        try {
+            $config = Yaml::parseFile($deptracPath);
+        } catch (ParseException) {
+            return ['layers' => [], 'dependencies' => []];
+        }
 
         if (!is_array($config) || !isset($config['deptrac']) || !is_array($config['deptrac'])) {
             return ['layers' => [], 'dependencies' => []];
