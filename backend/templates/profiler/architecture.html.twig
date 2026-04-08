@@ -1,0 +1,33 @@
+{# templates/profiler/architecture.html.twig #}
+{% extends '@WebProfiler/Profiler/layout.html.twig' %}
+
+{% block toolbar %}
+    {% set icon %}
+        {{ include('profiler/skyscraper.svg') }}
+        <span class="sf-toolbar-value">{{ collector.details|length }}</span>
+    {% endset %}
+
+    {% set text %}
+        <div class="sf-toolbar-info-piece">
+            <b>Architecture</b>
+            <span>{{ collector.details|length }}</span>
+        </div>
+    {% endset %}
+
+    {{ include('@WebProfiler/Profiler/toolbar_item.html.twig', { link: true, icon: icon, text: text }) }}
+{% endblock %}
+
+{% block menu %}
+    <span class="label">
+        {{ include('profiler/skyscraper.svg') }}
+        <strong>Architecture</strong>
+        <span class="count">{{ collector.details|length }}</span>
+    </span>
+{% endblock %}
+
+{% block panel %}
+    <h2>Architecture</h2>
+    <div class="empty">
+        <p>No details yet.</p>
+    </div>
+{% endblock %}
