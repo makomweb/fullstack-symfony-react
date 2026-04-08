@@ -1,0 +1,22 @@
+{
+  "name": "deptrac-visualization",
+  "version": "1.0.0",
+  "description": "Pure JavaScript visualization for onion architecture diagrams from deptrac.yaml",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "deptrac",
+    "architecture",
+    "visualization",
+    "onion-architecture",
+    "svg"
+  ],
+  "author": "",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "TODO: add repository when extracted as standalone package"
+  }
+}

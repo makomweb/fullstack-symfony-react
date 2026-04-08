@@ -65,11 +65,11 @@
             </table>
         </div>
         
-        <script src="/js/architecture-visualization.js"></script>
+        <script src="/js/deptrac-visualization/index.js"></script>
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 const architectureData = {{ collector.details|json_encode|raw }};
-                new ArchitectureVisualization('architecture-visualization', architectureData);
+                new DeptracVisualization('architecture-visualization', architectureData);
             });
         </script>
     {% endif %}
