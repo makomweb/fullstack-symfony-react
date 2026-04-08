@@ -44,8 +44,10 @@ class ArchitectureVisualization {
         
         const availableRadius = Math.min(this.width, this.height) / 2 - this.margin;
         
-        // Fixed layer order: Core innermost, Tests outermost
-        const layerOrder = ['Core', 'Supporting', 'Generic', 'Tests'];
+        // Layer order: alphabetical for consistent ordering, with arrows pointing inward
+        // Core → Generic → Supporting → Tests (innermost to outermost)
+        // This ensures all arrows point from outer layers towards inner dependencies
+        const layerOrder = ['Core', 'Generic', 'Supporting', 'Tests'];
         const sortedLayers = layerOrder
             .filter(name => layers[name])
             .map(name => ({ name, ...layers[name] }));
