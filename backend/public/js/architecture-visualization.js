@@ -69,29 +69,34 @@ class ArchitectureVisualization {
             // Reverse the radius: Core should be INNERMOST (smallest radius)
             // Tests should be OUTERMOST (largest radius)
             const depth = layerCount - 1 - index;
-            const radius = availableRadius - (depth * layerThickness);
-            const nextRadius = availableRadius - ((depth + 1) * layerThickness);
-            const midRadius = (radius + nextRadius) / 2;
+            const innerRadius = availableRadius - ((depth + 1) * layerThickness);
+            const outerRadius = availableRadius - (depth * layerThickness);
+            const midRadius = (innerRadius + outerRadius) / 2;
             
             layerPositions[layer.name] = {
                 index,
-                radius,
-                nextRadius,
+                innerRadius,
+                outerRadius,
                 midRadius
             };
             
             const color = colors[layer.name];
             
-            // Draw filled circle
-            const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-            ring.setAttribute('cx', this.centerX);
-            ring.setAttribute('cy', this.centerY);
-            ring.setAttribute('r', radius);
-            ring.setAttribute('fill', color.fill);
-            ring.setAttribute('opacity', '0.85');
-            ring.setAttribute('stroke', color.stroke);
-            ring.setAttribute('stroke-width', '2');
-            svg.appendChild(ring);
+            // Draw annulus (ring) using path instead of overlapping circles
+            // This prevents color blending from opacity overlap
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            
+            // Create a ring path: outer circle - inner circle
+            const outerCircle = `M ${this.centerX + outerRadius} ${this.centerY} A ${outerRadius} ${outerRadius} 0 1 1 ${this.centerX - outerRadius} ${this.centerY} A ${outerRadius} ${outerRadius} 0 1 1 ${this.centerX + outerRadius} ${this.centerY}`;
+            const innerCircle = `M ${this.centerX + innerRadius} ${this.centerY} A ${innerRadius} ${innerRadius} 0 1 0 ${this.centerX - innerRadius} ${this.centerY} A ${innerRadius} ${innerRadius} 0 1 0 ${this.centerX + innerRadius} ${this.centerY}`;
+            
+            const pathData = outerCircle + ' ' + innerCircle;
+            path.setAttribute('d', pathData);
+            path.setAttribute('fill', color.fill);
+            path.setAttribute('fill-rule', 'evenodd');
+            path.setAttribute('stroke', color.stroke);
+            path.setAttribute('stroke-width', '1');
+            svg.appendChild(path);
             
             // Add layer name
             const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
@@ -156,13 +161,13 @@ class ArchitectureVisualization {
                 const angle = startAngle + (depIndex + 1) * angleStep;
                 const angleRad = (angle * Math.PI) / 180;
                 
-                // Start point: at source layer radius
-                const startRadius = sourcePos.radius + 5;
+                // Start point: at outer edge of source layer
+                const startRadius = sourcePos.outerRadius + 5;
                 const startX = this.centerX + Math.cos(angleRad) * startRadius;
                 const startY = this.centerY + Math.sin(angleRad) * startRadius;
                 
-                // End point: at target layer radius
-                const endRadius = targetPos.radius + 5;
+                // End point: at outer edge of target layer
+                const endRadius = targetPos.outerRadius + 5;
                 const endX = this.centerX + Math.cos(angleRad) * endRadius;
                 const endY = this.centerY + Math.sin(angleRad) * endRadius;
                 
