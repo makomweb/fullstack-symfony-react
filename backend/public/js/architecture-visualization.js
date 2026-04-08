@@ -53,39 +53,42 @@ class ArchitectureVisualization {
         const layerCount = sortedLayers.length;
         const layerThickness = availableRadius / layerCount;
         
-        // Color palette
+        // Color palette - darker colors, Core is dark red
         const colors = {
-            'Core': { fill: '#FF6B6B', stroke: '#C92A2A', text: '#ffffff' },
-            'Supporting': { fill: '#4ECDC4', stroke: '#0F9F93', text: '#ffffff' },
-            'Generic': { fill: '#45B7D1', stroke: '#0099CC', text: '#ffffff' },
-            'Tests': { fill: '#FFA07A', stroke: '#FF6B4A', text: '#ffffff' }
+            'Core': { fill: '#8B1A1A', stroke: '#5C0A0A', text: '#ffffff' },
+            'Supporting': { fill: '#1B8A7E', stroke: '#0F5F57', text: '#ffffff' },
+            'Generic': { fill: '#0066CC', stroke: '#003D99', text: '#ffffff' },
+            'Tests': { fill: '#FF6B35', stroke: '#CC5529', text: '#ffffff' }
         };
         
         // Create position map for arrows
         const layerPositions = {};
         
-        // Draw concentric rings from outermost to innermost
+        // Draw concentric rings from innermost (Core) to outermost (Tests)
         sortedLayers.forEach((layer, index) => {
-            const outerRadius = availableRadius - (layerThickness * index);
-            const innerRadius = availableRadius - (layerThickness * (index + 1));
-            const midRadius = (outerRadius + innerRadius) / 2;
+            // Reverse the radius: Core should be INNERMOST (smallest radius)
+            // Tests should be OUTERMOST (largest radius)
+            const depth = layerCount - 1 - index;
+            const radius = availableRadius - (depth * layerThickness);
+            const nextRadius = availableRadius - ((depth + 1) * layerThickness);
+            const midRadius = (radius + nextRadius) / 2;
             
             layerPositions[layer.name] = {
                 index,
-                innerRadius,
-                outerRadius,
+                radius,
+                nextRadius,
                 midRadius
             };
             
             const color = colors[layer.name];
             
-            // Draw filled circle (ring)
+            // Draw filled circle
             const ring = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
             ring.setAttribute('cx', this.centerX);
             ring.setAttribute('cy', this.centerY);
-            ring.setAttribute('r', innerRadius);
+            ring.setAttribute('r', radius);
             ring.setAttribute('fill', color.fill);
-            ring.setAttribute('opacity', '0.8');
+            ring.setAttribute('opacity', '0.85');
             ring.setAttribute('stroke', color.stroke);
             ring.setAttribute('stroke-width', '2');
             svg.appendChild(ring);
@@ -135,8 +138,6 @@ class ArchitectureVisualization {
 
     drawDependencyArrows(svg, sortedLayers, dependencies, layerPositions) {
         // For each layer, draw arrows to its dependencies
-        let arrowIndex = 0;
-        
         sortedLayers.forEach((sourceLayer) => {
             const deps = dependencies[sourceLayer.name] || [];
             const sourcePos = layerPositions[sourceLayer.name];
@@ -155,13 +156,13 @@ class ArchitectureVisualization {
                 const angle = startAngle + (depIndex + 1) * angleStep;
                 const angleRad = (angle * Math.PI) / 180;
                 
-                // Start point: outer edge of source layer
-                const startRadius = sourcePos.outerRadius + 5;
+                // Start point: at source layer radius
+                const startRadius = sourcePos.radius + 5;
                 const startX = this.centerX + Math.cos(angleRad) * startRadius;
                 const startY = this.centerY + Math.sin(angleRad) * startRadius;
                 
-                // End point: outer edge of target layer
-                const endRadius = targetPos.outerRadius + 5;
+                // End point: at target layer radius
+                const endRadius = targetPos.radius + 5;
                 const endX = this.centerX + Math.cos(angleRad) * endRadius;
                 const endY = this.centerY + Math.sin(angleRad) * endRadius;
                 
@@ -180,8 +181,6 @@ class ArchitectureVisualization {
                 path.setAttribute('opacity', '0.6');
                 path.setAttribute('marker-end', 'url(#arrowhead)');
                 svg.appendChild(path);
-                
-                arrowIndex++;
             });
         });
     }
@@ -189,6 +188,14 @@ class ArchitectureVisualization {
     addLegend(svg) {
         const legendX = this.width - 200;
         const legendY = 20;
+        
+        // Color mapping
+        const colorMap = {
+            'Core': '#8B1A1A',
+            'Supporting': '#1B8A7E',
+            'Generic': '#0066CC',
+            'Tests': '#FF6B35'
+        };
         
         // Legend background
         const bg = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
@@ -223,13 +230,7 @@ class ArchitectureVisualization {
             square.setAttribute('y', yPos - 8);
             square.setAttribute('width', '12');
             square.setAttribute('height', '12');
-            const colors = {
-                'Core': '#FF6B6B',
-                'Supporting': '#4ECDC4',
-                'Generic': '#45B7D1',
-                'Tests': '#FFA07A'
-            };
-            square.setAttribute('fill', colors[layerName]);
+            square.setAttribute('fill', colorMap[layerName]);
             svg.appendChild(square);
             
             // Label
