@@ -82,6 +82,11 @@
                                 <!-- CSRF Token -->
                                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
 
+                                <!-- Target Path for post-login redirect -->
+                                {% if app.request.query.get('_target_path') %}
+                                    <input type="hidden" name="_target_path" value="{{ app.request.query.get('_target_path') }}">
+                                {% endif %}
+
                                 <!-- Submit Button -->
                                 <button class="btn btn-lg btn-primary w-100 fw-semibold mb-3" type="submit">
                                     Sign In

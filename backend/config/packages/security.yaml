@@ -21,6 +21,11 @@ security:
                 check_path: app.login
                 enable_csrf: true
                 success_handler: App\Security\AuthenticationSuccessHandler
+                # Symfony's built-in target path parameter for post-login redirects
+                # When login form includes _target_path, user is redirected there after successful auth
+                target_path_parameter: _target_path
+                # Default fallback if no _target_path is provided
+                default_target_path: /game/index
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds

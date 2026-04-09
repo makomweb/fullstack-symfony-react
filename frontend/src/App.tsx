@@ -15,7 +15,13 @@ function AppContent() {
     if (!pending && !me) {
       // Extract backend base URL from API URL (remove /api suffix)
       const backendBaseUrl = BACKEND_API_URL.replace(/\/api$/, "");
-      window.location.href = `${backendBaseUrl}/login`;
+      
+      // Pass current URL as _target_path so user is redirected back after login
+      // This uses Symfony's built-in post-login redirect mechanism
+      const currentUrl = window.location.href;
+      const targetPath = encodeURIComponent(currentUrl);
+      
+      window.location.href = `${backendBaseUrl}/login?_target_path=${targetPath}`;
     }
   }, [pending, me]);
 
