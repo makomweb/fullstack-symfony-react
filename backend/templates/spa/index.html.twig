@@ -1,4 +1,14 @@
 <!doctype html>
+{#
+  Production Entry Point - Served by SpaController
+  
+  Used ONLY in production via Symfony backend (port 8080 at /spa)
+  - Symfony renders this template with injected environment variables
+  - Loads pre-compiled React app from /dist/main.js (optimized bundle)
+  - Configuration values injected at runtime by SpaController
+  
+  Development uses frontend/index.html with Vite dev server instead.
+#}
 <html lang="en">
   <head>
     <meta charset="UTF-8" />

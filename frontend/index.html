@@ -1,7 +1,14 @@
 <!doctype html>
 <!--
-// TODO: Check if this is obsolete due to the React app being served via backend?
-// TODO: Also check if this might be necessary for development though!
+  Development Entry Point for Vite Dev Server (port 8090)
+  
+  Used ONLY during development when running: npm run dev
+  - Vite serves this file and enables Hot Module Reload (HMR)
+  - Loads React app from /src/main.tsx (TypeScript source)
+  - Fast feedback loop for development
+  
+  In production, this file is ignored entirely.
+  See backend/templates/spa/index.html.twig for production entry point.
 -->
 <html lang="en">
   <head>
