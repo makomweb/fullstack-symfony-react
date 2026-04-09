@@ -3,14 +3,20 @@
 namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-class SpaController extends AbstractController
+final class SpaController extends AbstractController
 {
     public function __construct(
+        #[Autowire('%kernel.environment%')]
+        private readonly string $environment,
+        #[Autowire('%spa.backend_api_url%')]
         private readonly string $backendApiUrl,
+        #[Autowire('%spa.otel_collector_address%')]
         private readonly string $otelCollectorAddress,
     ) {
     }
@@ -25,6 +31,11 @@ class SpaController extends AbstractController
     #[Route('/{reactRouting}', name: 'spa', requirements: ['reactRouting' => '^(?!api|admin|login|logout|game|_).+'], methods: ['GET'])]
     public function index(): Response
     {
+        //if ('dev' === $this->environment)
+        {
+            return new RedirectResponse('http://localhost:8090');
+        }
+
         return $this->render('spa/index.html.twig', [
             'backend_api_url' => $this->backendApiUrl,
             'otel_collector_address' => $this->otelCollectorAddress,
