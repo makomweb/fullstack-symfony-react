@@ -5,45 +5,13 @@ interface ErrorResponseType {
   error: string;
 }
 
-export async function loginAsync(
-  email: string,
-  password: string,
-  rememberMe: boolean,
-): Promise<User> {
-  const url = `${BACKEND_API_URL}/login`;
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    credentials: "include",
-    body: JSON.stringify({
-      email: email,
-      password: password,
-      _remember_me: rememberMe,
-    }),
-  });
-
-  const obj = await response.json();
-
-  if (!response.ok) {
-    const errorObj = obj as ErrorResponseType;
-    throw Error(errorObj.error);
-  }
-
-  return obj;
-}
-
-export async function logoutAsync(): Promise<void> {
-  const url = `${BACKEND_API_URL}/logout`;
-  const response = await fetch(url, {
-    method: "POST",
-    credentials: "include",
-  });
-
-  if (!response.ok) {
-    throw Error(`Logout failed with ${response.status}!`);
-  }
+/**
+ * Logout by redirecting to server logout endpoint.
+ * Server clears session and redirects to login form.
+ * Non-async but kept in auth API module for consistency.
+ */
+export function logoutAsync(): void {
+  window.location.href = "/logout";
 }
 
 export async function checkRememberMeAsync(): Promise<User> {

@@ -15,6 +15,21 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY build/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
 # -----------------------------------
+# Frontend-Stage (Node + Vite build)
+# -----------------------------------
+FROM node:20-alpine AS frontend
+
+WORKDIR /var/www/project/frontend
+
+COPY frontend/package*.json ./
+RUN npm ci
+
+COPY frontend/ .
+
+# Build React app with Vite
+RUN npm run build
+
+# -----------------------------------
 # Development-Stage (with Composer + XDebug)
 # -----------------------------------
 FROM base AS dev
@@ -75,6 +90,9 @@ COPY backend/public ./public
 COPY backend/src ./src
 COPY backend/symfony.lock .
 COPY backend/templates ./templates
+
+# Copy built React frontend from frontend stage
+COPY --from=frontend /var/www/project/frontend/dist ./public/dist
 
 #RUN mkdir -p var/cache var/log && chmod -R 777 var
 # The following might not be required once we have the shared cache - check it!

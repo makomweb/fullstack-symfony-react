@@ -16,15 +16,11 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            json_login:
-                login_path: api.login
-                check_path: api.login
-                username_path: email
-                password_path: password
             form_login:
                 login_path: app.login
                 check_path: app.login
                 enable_csrf: true
+                success_handler: App\Security\AuthenticationSuccessHandler
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
@@ -46,10 +42,11 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/login, roles: PUBLIC_ACCESS }
+        # Game routes require authenticated user
         - { path: ^/game, roles: ROLE_USER }
+        # /api/me is needed by SPA to verify session on load (checkRememberMeAsync)
         - { path: ^/api/me, roles: PUBLIC_ACCESS }
+        # Future API routes (if needed) would require authentication
         - { path: ^/api, roles: ROLE_USER }
 
 when@test:
