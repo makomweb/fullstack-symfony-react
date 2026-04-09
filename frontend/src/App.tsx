@@ -3,19 +3,21 @@ import { MyErrorBoundary, CustomThemeProvider, Loading } from "./components";
 import Router from "./Router";
 import { Notifier, useRememberMe } from "./features";
 import { UserContextProvider } from "./features/auth";
-import { BrowserRouter, useNavigate } from "react-router-dom";
+import { BrowserRouter } from "react-router-dom";
 import { useEffect } from "react";
+import { BACKEND_API_URL } from "./config/env";
 
 function AppContent() {
   const { pending, me } = useRememberMe();
-  const navigate = useNavigate();
 
-  // Redirect to login if user is not authenticated (fallback defense-in-depth)
+  // Redirect to backend login if user is not authenticated
   useEffect(() => {
     if (!pending && !me) {
-      navigate("/login", { replace: true });
+      // Extract backend base URL from API URL (remove /api suffix)
+      const backendBaseUrl = BACKEND_API_URL.replace(/\/api$/, "");
+      window.location.href = `${backendBaseUrl}/login`;
     }
-  }, [pending, me, navigate]);
+  }, [pending, me]);
 
   if (pending) {
     return <Loading text={"Loading..."} />;
