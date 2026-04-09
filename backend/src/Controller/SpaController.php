@@ -39,9 +39,9 @@ final class SpaController extends AbstractController
     public function index(string $reactRouting = ''): Response
     {
         // In development, redirect to Vite dev server for HMR
-        if ('dev' === $this->environment) {
-            return new RedirectResponse("http://localhost:5173/", 307);
-        }
+        // if ('dev' === $this->environment) {
+        //     return new RedirectResponse("http://localhost:5173/", 307);
+        // }
 
         // In production, serve the pre-built Vite index.html with injected env vars
         return $this->serveBuildOutput();
@@ -50,6 +50,7 @@ final class SpaController extends AbstractController
     /**
      * Serve pre-built React app from public/dist/.
      * Reads the Vite-generated index.html and injects environment variables.
+     * Also rewrites asset paths from /assets/ to /dist/assets/ (where they actually are).
      */
     private function serveBuildOutput(): Response
     {
@@ -63,6 +64,11 @@ final class SpaController extends AbstractController
         }
 
         $content = file_get_contents($viteIndexPath);
+
+        // Rewrite asset paths: /assets/ → /dist/assets/
+        // Vite generates paths like /assets/index-HASH.js but they're actually at /dist/assets/
+        $content = str_replace('src="/assets/', 'src="/dist/assets/', $content);
+        $content = str_replace('href="/assets/', 'href="/dist/assets/', $content);
 
         // Inject environment variables as window global variables
         $injectionScript = sprintf(
