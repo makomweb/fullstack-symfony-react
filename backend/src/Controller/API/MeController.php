@@ -12,6 +12,8 @@ use Symfony\Component\Routing\Attribute\Route;
  * Used by frontend's checkRememberMeAsync() during app initialization.
  * Required for session verification when user returns with remember-me cookie.
  */
+// TODO I don't think this is useful anymore. Check if we can remove it!
+// TODO We need to have an API logout! The modern app is not able to logout at the moment.
 #[Route('/api', name: 'api.')]
 class MeController extends AbstractController
 {
