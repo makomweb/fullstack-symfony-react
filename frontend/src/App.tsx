@@ -46,7 +46,7 @@ export default function App() {
     <CustomThemeProvider>
       <Notifier>
         <MyErrorBoundary>
-          <BrowserRouter>
+          <BrowserRouter basename="/spa">
             <AppContent />
           </BrowserRouter>
         </MyErrorBoundary>
