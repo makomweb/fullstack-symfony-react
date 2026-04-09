@@ -11,7 +11,7 @@ class AdminLoginRedirectController extends AbstractController
     /**
      * Convenience route for admin login.
      * Redirects to the shared login form with admin email prefilled (via query parameter).
-     * The admin can optionally prefill the email field by visiting /admin/login?email=admin@example.com
+     * The admin can optionally prefill the email field by visiting /admin/login?email=admin@example.com.
      */
     #[Route('/admin/login', name: 'admin.login')]
     public function redirectToAdminLogin(): RedirectResponse

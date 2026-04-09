@@ -27,4 +27,3 @@ class SpaController extends AbstractController
         ]);
     }
 }
-
