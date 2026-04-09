@@ -35,8 +35,7 @@ final class SpaController extends AbstractController
      * Unauthenticated users are redirected to /login by the firewall.
      */
     #[IsGranted('ROLE_USER')]
-    #[Route('/spa', name: 'spa_root', methods: ['GET'])]
-    #[Route('/spa/{reactRouting}', name: 'spa', requirements: ['reactRouting' => '^(?!api|admin|login|logout|game|_).+'], methods: ['GET'])]
+    #[Route('/spa/{reactRouting}', name: 'spa', requirements: ['reactRouting' => '^(?!api|admin|login|logout|_)[a-z0-9/\-]*$'], methods: ['GET'], defaults: ['reactRouting' => ''])]
     public function index(string $reactRouting = ''): Response
     {
         // In development, redirect to Vite dev server for HMR

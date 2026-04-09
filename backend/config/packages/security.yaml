@@ -16,6 +16,7 @@ security:
         main:
             lazy: true
             provider: app_user_provider
+            entry_point: App\Security\CustomAuthenticationEntryPoint
             form_login:
                 login_path: app.login
                 check_path: app.login
@@ -52,6 +53,7 @@ security:
         # Game routes require authenticated user
         - { path: ^/game, roles: ROLE_USER }
         # /api/me is needed by SPA to verify session on load (checkRememberMeAsync)
+        # TODO: Check if this is needed!
         - { path: ^/api/me, roles: PUBLIC_ACCESS }
         # Future API routes (if needed) would require authentication
         - { path: ^/api, roles: ROLE_USER }
