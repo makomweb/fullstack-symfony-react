@@ -11,13 +11,6 @@ backend:
     password: "secret"
   secret: "5fb106d07c5b59845136ac75b26a925f"
 
-# Frontend Application
-frontend:
-  image: fullstack-symfony-react-web:0.9.2
-  replicas: 1
-  nodePort: 30200
-  apiAddress: "http://localhost:30100/api"
-
 # Database
 database:
   rootPassword: "secret"
