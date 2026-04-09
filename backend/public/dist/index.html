@@ -1,0 +1,27 @@
+<!doctype html>
+<!--
+  Development Entry Point for Vite Dev Server (port 8090)
+  
+  Used ONLY during development when running: npm run dev
+  - Vite serves this file and enables Hot Module Reload (HMR)
+  - Loads React app from /src/main.tsx (TypeScript source)
+  - Fast feedback loop for development
+  
+  In production, this file is ignored entirely.
+  See backend/templates/spa/index.html.twig for production entry point.
+-->
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React + K8s demo app</title>
+    <script>window.BACKEND_API_URL = "http://localhost:8080/api";</script>
+    <script>window.OTEL_COLLECTOR_ADDRESS = "http://localhost:4318";</script>
+    <script type="module" crossorigin src="/assets/index-CG5dkfig.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DV28BTpM.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

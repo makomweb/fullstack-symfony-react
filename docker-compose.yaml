@@ -148,7 +148,7 @@ services:
         networks:
             - fullstack-symfony-react
 
-    # React + Material UI frontend
+    # React + Material UI frontend with Vite dev server for HMR
     frontend:
         image: ${NODE_IMAGE}
         working_dir: /app
@@ -162,7 +162,7 @@ services:
             - OTEL_COLLECTOR_ADDRESS=http://localhost:4318
         networks:
             - fullstack-symfony-react 
-        command: ["sh", "-c", "npm ci && node inject.env.cjs --indexPath=./index.html && npm run dev"]
+        command: ["sh", "-c", "npm ci && npm run dev"]
 
     # message queue
     rabbitmq:
