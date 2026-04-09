@@ -4,12 +4,10 @@ controllers:
         namespace: App\Controller
     type: attribute
 
-# For unauthenticated users, redirect to login
-# For authenticated users, SpaController will handle all remaining routes
+# Root redirect to default route (for unauthenticated users)
+# Attribute-based routes (controllers) have priority and will be checked first
 root_shortcut:
     path: /
     controller: Symfony\Bundle\FrameworkBundle\Controller\RedirectController
     defaults:
         route: 'app.index_games'
-        ignoreAttributes: false
-    priority: -10
