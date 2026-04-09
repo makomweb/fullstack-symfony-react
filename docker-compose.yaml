@@ -162,7 +162,7 @@ services:
             - OTEL_COLLECTOR_ADDRESS=http://localhost:4318
         networks:
             - fullstack-symfony-react 
-        command: ["sh", "-c", "npm install && node inject.env.cjs --indexPath=./index.html && npm run dev"]
+        command: ["sh", "-c", "npm ci && node inject.env.cjs --indexPath=./index.html && npm run dev"]
 
     # message queue
     rabbitmq:
