@@ -32,33 +32,35 @@ monitoring and observability.
 ## System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           Client Layer                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌──────────────────┐              ┌──────────────────┐                 │
-│  │   React UI       │              │   Login Form     │                 │
-│  │  (Modern SPA)    │              │  (TWIG Template) │                 │
-│  │  Port 8090       │              │  Port 8080       │                 │
-│  └────────┬─────────┘              └────────┬─────────┘                 │
-│           │                                  │                          │
-└───────────┼──────────────────────────────────┼──────────────────────────┘
-            │                                  │
-            └──────────────────┬───────────────┘
-                               │
-┌──────────────────────────────▼───────────────────────────────────────────┐
-│                        Backend (Port 8080)                               │
+┌──────────────────────────────────────────────────────────────────────────┐
+│                           Client Layer                                   │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│  ┌────────────────────────────────────────────────────────────┐          │
-│  │  PHP 8.4 + Symfony 8 Application                           │          │
-│  │  - SpaController (React app for authenticated users)        │          │
-│  │  - REST API Endpoints                                      │          │
-│  │  - Business Logic & Event Sourcing                         │          │
-│  │  - Session-based Authentication                           │          │
-│  └────────┬──────────────────┬─────────────┬──────────────────┘          │
-│           │                  │             │                             │
-└───────────┼──────────────────┼─────────────┼─────────────────────────────┘
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
+│  │   React UI       │  │   Legacy UI      │  │   Login Form     │        │
+│  │  (Modern SPA)    │  │  (TWIG / Game)   │  │  (TWIG Template) │        │
+│  │  Port 8090       │  │  Port 8080       │  │  Port 8080       │        │
+│  │  (dev via Vite)  │  │  (via SpaCtrl)   │  │  (via Backend)   │        │
+│  └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘        │
+│           │                     │                     │                  │
+└───────────┼─────────────────────┼─────────────────────┼──────────────────┘
+            │                     │                     │
+            └─────────────────────┴─────────┬───────────┘
+                                            │
+┌───────────────────────────────────────────▼────────────────────────────────┐
+│                      Backend (Port 8080)                                   │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│  ┌──────────────────────────────────────────────────────────────┐          │
+│  │  PHP 8.4 + Symfony 8 Application                             │          │
+│  │  - SpaController (React app for authenticated users)          │          │
+│  │  - Game Routes (Legacy UI endpoints)                         │          │
+│  │  - REST API Endpoints                                        │          │
+│  │  - Business Logic & Event Sourcing                           │          │
+│  │  - Session-based Authentication                             │          │
+│  └────────┬──────────────────┬─────────────┬────────────────────┘          │
+│           │                  │             │                               │
+└───────────┼──────────────────┼─────────────┼───────────────────────────────┘
             │                  │             │
     ┌───────▼──────┐   ┌──────▼────────┐  ┌─▼──────────────┐
     │              │   │               │  │                │
@@ -105,12 +107,13 @@ make down
 
 ## Services & Access Points
 
-**Frontend**
-| Service | URL |
-|---------|-----|
-| Login Form | [http://localhost:8080/login](http://localhost:8080/login) |
-| React App | [http://localhost:8090](http://localhost:8090) (dev with HMR) |
-| React App | [http://localhost:8080/spa](http://localhost:8080/spa) (production) |
+**Frontend Applications**
+| Service | URL | Notes |
+|---------|-----|-------|
+| Login Form | [http://localhost:8080/login](http://localhost:8080/login) | Shared TWIG form for all users |
+| Modern App (React) | [http://localhost:8090](http://localhost:8090) | Dev: Vite dev server with HMR |
+| Modern App (React) | [http://localhost:8080/spa](http://localhost:8080/spa) | Production: SpaController |
+| Legacy App (TWIG) | [http://localhost:8080/game](http://localhost:8080/game) | Traditional game tracker UI |
 
 **Backend & API**
 | Service | URL | Credentials |
