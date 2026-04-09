@@ -57,3 +57,31 @@
     - ❌ Provision Grafana dashboard, e.g. via ConfigMap
     - ❌ Deploy DB via stateful set
 - ❌ Include Alpine image into Docker multistage build for production
+
+# Unify login
+
+- current state::
+    - legacy app: 
+        - uses form_login (see security.yaml)
+        - a "non-admin" user logs in via route app.login (see: backend/src/Controller/LoginController.php
+    - admin panel:
+        - uses form_login (see security.yaml)
+        - a "admin" user logs uses the same login controller to access the admin panel
+        - the admin panel is secured via firewall - the user must have ROLE_ADMIN
+    - modern app:
+        - uses json_login (see security.yaml)
+        - provides a login form via React frontend
+
+- vision:
+    - legacy app:
+        - keep form_login as it is
+        - when regular user logs in redirect to the GameController::index() (as it is currently)
+        - when admin logs in redirect to the DashboardController::index() if possible (if it is too hard to implement - don't implement the redirect)
+        - keep the admin route for explicit admin login
+    - modern app:
+        - get inspiration from the split-fairly app
+            - this is a sibling project to this project
+            - it uses explicit vite build docker compose service
+            - it provides a highly customized SpaController
+        - uses form_login now
+        - check if we can reuse the existing TWIG form from the legacy app        
