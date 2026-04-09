@@ -10,7 +10,6 @@ use App\Game\Command\IncrementScoreCommand;
 use App\Game\Command\RemoveGameCommand;
 use App\Game\Game;
 use App\Game\Games;
-use App\Game\Statistic;
 use App\Game\Statistics;
 use Faker\Factory as Faker;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
