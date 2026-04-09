@@ -6,7 +6,7 @@
 
 The React application is served differently depending on the environment:
 
-**Development:** Vite dev server (port 8090) with Hot Module Reload (HMR) for fast feedback
+**Development:** Vite dev server (port 5173) with Hot Module Reload (HMR) for fast feedback
 **Production:** Symfony backend (port 8080) serves compiled React app to authenticated users
 
 ### Architecture
@@ -15,13 +15,13 @@ Two entry points ensure optimal developer experience and production efficiency:
 
 | Environment | Entry Point | Used By | Script | Features |
 |-------------|------------|---------|--------|----------|
-| **Development** | `frontend/index.html` | Vite dev server (8090) | `npm run dev` | HMR enabled, TypeScript source |
+| **Development** | `frontend/index.html` | Vite dev server (5173) | `npm run dev` | HMR enabled, TypeScript source |
 | **Production** | `backend/templates/spa/index.html.twig` | SpaController (8080) | `npm run build` | Compiled bundle, dynamic config |
 
-### Development Flow (Port 8090)
+### Development Flow (Port 5173)
 
 ```
-Browser (8090)
+Browser (5173)
   ↓
 Vite dev server loads: frontend/index.html
   ↓
@@ -65,7 +65,7 @@ Static asset serving - no HMR
 | Aspect | Development | Production |
 |--------|-------------|-----------|
 | **Served by** | Vite dev server | Symfony backend |
-| **Port** | 8090 | 8080 |
+| **Port** | 5173 | 8080 |
 | **Config** | Hardcoded in HTML | Injected by Twig |
 | **Source** | TypeScript (`/src/`) | Compiled (`/dist/`) |
 | **HMR** | ✅ Enabled | ❌ Disabled |

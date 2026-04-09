@@ -23,7 +23,7 @@ services:
       - name: "Application (modern)"
         subtitle: "Symfony + React + MySQL"
         icon: "fas fa-tablet-screen-button"
-        url: "http://localhost:8090"
+        url: "http://localhost:5173"
         target: "_blank"
 
   - name: "Infrastructure"

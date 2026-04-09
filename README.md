@@ -40,7 +40,7 @@ monitoring and observability.
 │  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
 │  │   React UI       │  │   Legacy UI      │  │   Login Form     │        │
 │  │  (Modern SPA)    │  │  (TWIG / Game)   │  │  (TWIG Template) │        │
-│  │  Port 8090       │  │  Port 8080       │  │  Port 8080       │        │
+│  │  Port 5173       │  │  Port 8080       │  │  Port 8080       │        │
 │  │  (dev via Vite)  │  │  (via SpaCtrl)   │  │  (via Backend)   │        │
 │  └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘        │
 │           │                     │                     │                  │
@@ -96,7 +96,7 @@ make open     # Open dashboard in browser
 
 **What's running?** 
 - Backend API at [http://localhost:8080](http://localhost:8080)
-- React UI at [http://localhost:8090](http://localhost:8090)
+- React UI at [http://localhost:5173](http://localhost:5173)
 - Monitoring at [http://localhost:3000](http://localhost:3000)
 
 **Stop everything:**
@@ -113,7 +113,7 @@ make down
 |---------|-----|
 | Login Form | [http://localhost:8080/login](http://localhost:8080/login) |
 | Legacy App | [http://localhost:8080/game/index](http://localhost:8080/game/index) |
-| React App | [http://localhost:8090](http://localhost:8090) (dev with HMR) |
+| React App | [http://localhost:5173](http://localhost:5173) (dev with HMR) |
 | React App | [http://localhost:8080/spa](http://localhost:8080/spa) (production) |
 
 **Backend & API**
