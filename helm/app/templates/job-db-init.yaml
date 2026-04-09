@@ -9,6 +9,9 @@ spec:
   template:
     spec:
       initContainers:
+      - name: wait-for-db
+        image: busybox:1.35
+        command: ['sh', '-c', 'until nc -z app-db 3306; do echo waiting for db; sleep 2; done']
       - name: create-db
         image: {{ .Values.backend.image }}
         command: ["/bin/sh","-c"]
