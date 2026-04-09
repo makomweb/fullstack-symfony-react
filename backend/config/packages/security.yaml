@@ -25,7 +25,8 @@ security:
                 # When login form includes _target_path, user is redirected there after successful auth
                 target_path_parameter: _target_path
                 # Default fallback if no _target_path is provided
-                default_target_path: /game/index
+                # Users are now redirected to the modern React SPA by default
+                default_target_path: /spa
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
@@ -46,6 +47,8 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
+        # SPA routes require authenticated user
+        - { path: ^/spa, roles: ROLE_USER }
         # Game routes require authenticated user
         - { path: ^/game, roles: ROLE_USER }
         # /api/me is needed by SPA to verify session on load (checkRememberMeAsync)
