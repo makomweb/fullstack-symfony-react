@@ -17,7 +17,8 @@ monitoring and observability.
 ### Tech Stack
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React 19 + MUI |
+| Frontend (modern) | React 19 + MUI |
+| Frontend (legacy) | Symfony 8 + TWIG + Bootstrap
 | Backend | PHP 8.4 + Symfony 8 |
 | Database | MySQL 8 |
 | DevOps | Docker, Kubernetes, Helm, Open Telemetry, Grafana |
@@ -53,16 +54,16 @@ monitoring and observability.
 │                                                                            │
 │  ┌──────────────────────────────────────────────────────────────┐          │
 │  │  PHP 8.4 + Symfony 8 Application                             │          │
-│  │  - SpaController (React app for authenticated users)          │          │
+│  │  - SpaController (React app for authenticated users)         │          │
 │  │  - Game Routes (Legacy UI endpoints)                         │          │
 │  │  - REST API Endpoints                                        │          │
 │  │  - Business Logic & Event Sourcing                           │          │
-│  │  - Session-based Authentication                             │          │
+│  │  - Session-based Authentication                              │          │
 │  └────────┬──────────────────┬─────────────┬────────────────────┘          │
 │           │                  │             │                               │
 └───────────┼──────────────────┼─────────────┼───────────────────────────────┘
             │                  │             │
-    ┌───────▼──────┐   ┌──────▼────────┐  ┌─▼──────────────┐
+    ┌───────▼──────┐   ┌───────▼───────┐  ┌──▼─────────────┐
     │              │   │               │  │                │
     │   Database   │   │  Redis Cache  │  │ Message Queue  │
     │   MySQL 8    │   │               │  │ (Messenger)    │
@@ -107,13 +108,13 @@ make down
 
 ## Services & Access Points
 
-**Frontend Applications**
-| Service | URL | Notes |
-|---------|-----|-------|
-| Login Form | [http://localhost:8080/login](http://localhost:8080/login) | Shared TWIG form for all users |
-| Modern App (React) | [http://localhost:8090](http://localhost:8090) | Dev: Vite dev server with HMR |
-| Modern App (React) | [http://localhost:8080/spa](http://localhost:8080/spa) | Production: SpaController |
-| Legacy App (TWIG) | [http://localhost:8080/game](http://localhost:8080/game) | Traditional game tracker UI |
+**Frontend**
+| Service | URL |
+|---------|-----|
+| Login Form | [http://localhost:8080/login](http://localhost:8080/login) |
+| Legacy App | [http://localhost:8080/game/index](http://localhost:8080/game/index) |
+| React App | [http://localhost:8090](http://localhost:8090) (dev with HMR) |
+| React App | [http://localhost:8080/spa](http://localhost:8080/spa) (production) |
 
 **Backend & API**
 | Service | URL | Credentials |
