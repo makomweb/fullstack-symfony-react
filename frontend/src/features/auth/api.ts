@@ -11,7 +11,9 @@ interface ErrorResponseType {
  * Non-async but kept in auth API module for consistency.
  */
 export function logoutAsync(): void {
-  window.location.href = "/logout";
+  // Extract backend base URL from API URL (remove /api suffix)
+  const backendBaseUrl = BACKEND_API_URL.replace(/\/api$/, "");
+  window.location.href = `${backendBaseUrl}/logout`;
 }
 
 export async function checkRememberMeAsync(): Promise<User> {
