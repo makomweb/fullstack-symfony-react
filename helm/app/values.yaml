@@ -3,7 +3,7 @@ environment: prod
 
 # Backend Application
 backend:
-  image: fullstack-symfony-react:0.9.1
+  image: fullstack-symfony-react:0.9.2
   replicas: 1
   nodePort: 30100
   admin:
@@ -13,7 +13,7 @@ backend:
 
 # Frontend Application
 frontend:
-  image: fullstack-symfony-react-web:0.9.1
+  image: fullstack-symfony-react-web:0.9.2
   replicas: 1
   nodePort: 30200
   apiAddress: "http://localhost:30100/api"
