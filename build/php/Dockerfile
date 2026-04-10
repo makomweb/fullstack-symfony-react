@@ -50,7 +50,7 @@ RUN npm ci
 COPY frontend/ .
 
 # Build React app with Vite
-RUN npm run build
+RUN OTEL_COLLECTOR_ADDRESS="http://localhost:30571/v1/logs" npm run build
 
 # -----------------------------------
 # Development-Stage (with Composer + XDebug)
