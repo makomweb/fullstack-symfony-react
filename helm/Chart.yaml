@@ -1,9 +1,9 @@
 apiVersion: v2
-name: fullstack-symfony-react
+name: fullstack
 description: Full-stack Symfony + React application with observability (LGTM)
 type: application
-version: 1.0.0
-appVersion: "1.0.0"
+version: 0.9.3
+appVersion: "0.9.3"
 
 maintainers:
   - name: Development Team

@@ -13,7 +13,7 @@ nginx:
 # PHP Application Backend
 app:
   replicas: 1
-  image: fullstack-symfony-react:1.0.0
+  image: fullstack-symfony-react:0.9.3
   port: 9000
   
   # Symfony environment variables

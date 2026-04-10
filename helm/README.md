@@ -18,13 +18,18 @@ Consolidated Kubernetes deployment chart for the complete full-stack application
 ## Quick Start
 
 ```bash
-# Install the chart
-helm install fullstack ./helm/fullstack \
-  -n fullstack \
+# Install the chart with release name 'myapp'
+helm install myapp ./helm \
+  -n myapp-ns \
+  --create-namespace
+
+# Or use different release name
+helm install production ./helm \
+  -n prod \
   --create-namespace
 
 # Verify deployment
-kubectl get pods -n fullstack
+kubectl get pods -n myapp-ns
 
 # Access the application
 # Web: http://localhost:30080
