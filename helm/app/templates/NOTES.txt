@@ -1,2 +1,0 @@
-Access the app at: http://kubernetes.docker.internal:{{ .Values.backend.nodePort }}
-Or at: http://localhost:{{ .Values.backend.nodePort }}

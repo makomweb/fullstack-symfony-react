@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fullstack.fullname" . }}-app
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fullstack.labels" . | nindent 4 }}
+    app: app
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      {{- include "fullstack.selectorLabels" . | nindent 6 }}
+      app: app
+  template:
+    metadata:
+      labels:
+        {{- include "fullstack.selectorLabels" . | nindent 8 }}
+        app: app
+    spec:
+      containers:
+      - name: app
+        image: {{ .Values.app.image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.app.port }}
+          name: fpm
+        envFrom:
+        - configMapRef:
+            name: {{ include "fullstack.fullname" . }}-app-config
+        env:
+        - name: DATABASE_URL
+          value: "mysql://{{ .Values.database.env.MYSQL_USER }}:{{ .Values.database.env.MYSQL_PASSWORD }}@db:3306/{{ .Values.database.env.MYSQL_DATABASE }}"
+        - name: REDIS_URL
+          value: "redis://cache:6379"
+        - name: OTEL_EXPORTER_OTLP_ENDPOINT
+          value: "http://lgtm:{{ .Values.observability.ports.otelHttp }}"
+        - name: APP_SECRET
+          value: {{ .Values.app.secret | quote }}
+        - name: ADMIN_EMAIL
+          value: {{ .Values.app.admin.email | quote }}
+        - name: ADMIN_PASSWORD
+          value: {{ .Values.app.admin.password | quote }}
+        livenessProbe:
+          tcpSocket:
+            port: fpm
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          tcpSocket:
+            port: fpm
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      initContainers:
+      - name: wait-for-db
+        image: busybox:latest
+        command: ['sh', '-c', 'until nc -z db 3306; do echo waiting for db; sleep 2; done']
+      - name: wait-for-cache
+        image: busybox:latest
+        command: ['sh', '-c', 'until nc -z cache 6379; do echo waiting for cache; sleep 2; done']

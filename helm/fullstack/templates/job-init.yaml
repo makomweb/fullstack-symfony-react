@@ -1,0 +1,40 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "fullstack.fullname" . }}-init
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fullstack.labels" . | nindent 4 }}
+    app: init
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - name: init
+        image: {{ .Values.app.image }}
+        imagePullPolicy: IfNotPresent
+        command:
+        - sh
+        - -c
+        - |
+          set -e
+          echo "Running database migrations..."
+          php bin/console doctrine:migrations:migrate --no-interaction
+          echo "✓ Database initialization complete"
+        envFrom:
+        - configMapRef:
+            name: {{ include "fullstack.fullname" . }}-app-config
+        env:
+        - name: DATABASE_URL
+          value: "mysql://{{ .Values.database.env.MYSQL_USER }}:{{ .Values.database.env.MYSQL_PASSWORD }}@db:3306/{{ .Values.database.env.MYSQL_DATABASE }}"
+        - name: REDIS_URL
+          value: "redis://cache:6379"
+        - name: APP_SECRET
+          value: {{ .Values.app.secret | quote }}
+      restartPolicy: Never
+      initContainers:
+      - name: wait-for-db
+        image: busybox:latest
+        command: ['sh', '-c', 'until nc -z db 3306; do echo waiting for db; sleep 2; done']
+  ttlSecondsAfterFinished: 300

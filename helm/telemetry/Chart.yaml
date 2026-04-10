@@ -1,6 +1,0 @@
-apiVersion: v2
-name: lgtm
-description: Helm chart for LGTM Stack telemetry (Grafana, Loki, Tempo, Prometheus, OpenTelemetry Collector)
-type: application
-version: 1.0.0
-appVersion: "0.8.1"

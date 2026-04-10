@@ -1,0 +1,52 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "fullstack.fullname" . }}-rabbitmq
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fullstack.labels" . | nindent 4 }}
+    app: rabbitmq
+spec:
+  containers:
+  - name: rabbitmq
+    image: {{ .Values.rabbitmq.image }}
+    ports:
+    - containerPort: {{ .Values.rabbitmq.port }}
+      name: amqp
+    - containerPort: {{ .Values.rabbitmq.managementPort }}
+      name: management
+    env:
+    - name: RABBITMQ_DEFAULT_USER
+      value: {{ .Values.rabbitmq.env.RABBITMQ_DEFAULT_USER | quote }}
+    - name: RABBITMQ_DEFAULT_PASS
+      value: {{ .Values.rabbitmq.env.RABBITMQ_DEFAULT_PASS | quote }}
+    livenessProbe:
+      exec:
+        command:
+        - rabbitmq-diagnostics
+        - ping
+      initialDelaySeconds: 30
+      periodSeconds: 10
+    readinessProbe:
+      exec:
+        command:
+        - rabbitmq-diagnostics
+        - ping
+      initialDelaySeconds: 5
+      periodSeconds: 10
+  restartPolicy: Always
+
+  # DOCUMENTATION:
+  # For PRODUCTION use StatefulSet instead of Pod!
+  # 
+  # This Pod is ephemeral - RabbitMQ messages and configuration are lost on pod restart.
+  # 
+  # Production setup should use:
+  # 1. StatefulSet with persistent storage
+  # 2. PersistentVolume (PV) for RabbitMQ data
+  # 3. PersistentVolumeClaim (PVC)
+  # 4. RabbitMQ Cluster for high availability (multiple replicas)
+  # 
+  # Also consider:
+  # - Using managed message queue services (AWS SQS/MQ, GCP Pub/Sub, etc.)
+  # - RabbitMQ Operator for advanced clustering and management

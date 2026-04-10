@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: db
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fullstack.labels" . | nindent 4 }}
+    app: db
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "fullstack.selectorLabels" . | nindent 4 }}
+    app: db
+  ports:
+  - port: 3306
+    targetPort: mysql
+    name: mysql

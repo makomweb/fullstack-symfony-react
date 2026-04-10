@@ -1,0 +1,90 @@
+# Global Configuration
+global:
+  environment: prod
+  imageRegistry: ""  # Leave empty to use docker.io or set to your registry
+
+# Nginx Reverse Proxy
+nginx:
+  replicas: 1
+  image: nginx:latest
+  port: 80
+  nodePort: 30080
+
+# PHP Application Backend
+app:
+  replicas: 1
+  image: fullstack-symfony-react:1.0.0
+  port: 9000
+  
+  # Symfony environment variables
+  env:
+    APP_ENV: prod
+    APP_DEBUG: "0"
+    MESSENGER_TRANSPORT_DSN: "amqp://rabbitmq:rabbitmq@rabbitmq:5672/%2f/messages"
+  
+  # Admin credentials (change in production!)
+  admin:
+    email: "admin@example.com"
+    password: "secret"  # IMPORTANT: Override this in production
+  
+  # Symfony secret (change in production!)
+  secret: "5fb106d07c5b59845136ac75b26a925f"  # IMPORTANT: Generate a new one
+
+# MySQL Database
+database:
+  image: mysql:8.0
+  port: 3306
+  
+  # WARNING: Using Pod for dev/testing only!
+  # For production, use StatefulSet with PersistentVolume (see documentation below)
+  env:
+    MYSQL_ROOT_PASSWORD: "secret"  # IMPORTANT: Override in production
+    MYSQL_DATABASE: "fullstack"
+    MYSQL_USER: "symfony"
+    MYSQL_PASSWORD: "secret"  # IMPORTANT: Override in production
+  
+  # Storage configuration (Pod-based only, ephemeral)
+  # For production StatefulSet with PersistentVolume, add:
+  # persistence:
+  #   enabled: true
+  #   size: 10Gi
+  #   storageClass: "standard"
+
+# Redis Cache & Session Storage
+cache:
+  image: redis:7-alpine
+  port: 6379
+  
+  # WARNING: Using Pod for dev/testing only!
+  # For production, use StatefulSet with PersistentVolume
+
+# RabbitMQ Message Broker
+rabbitmq:
+  image: rabbitmq:4-management-alpine
+  port: 5672
+  managementPort: 15672
+  
+  env:
+    RABBITMQ_DEFAULT_USER: "rabbitmq"
+    RABBITMQ_DEFAULT_PASS: "rabbitmq"  # IMPORTANT: Override in production
+  
+  # WARNING: Using Pod for dev/testing only!
+  # For production, use StatefulSet with PersistentVolume
+
+# LGTM Stack (Grafana, Loki, Tempo, Prometheus, OpenTelemetry Collector)
+observability:
+  image: grafana/otel-lgtm:0.8.1
+  
+  # Services exposed by LGTM
+  ports:
+    grafana: 3000
+    otelGrpc: 4317
+    otelHttp: 4318
+    prometheus: 9090
+  
+  nodePort: 30300
+
+# Database Initialization Job
+init:
+  enabled: true
+  # Job runs composer install + database migrations before app starts

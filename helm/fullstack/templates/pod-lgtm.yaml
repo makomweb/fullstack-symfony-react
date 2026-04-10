@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: {{ include "fullstack.fullname" . }}-lgtm
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fullstack.labels" . | nindent 4 }}
+    app: lgtm
+spec:
+  containers:
+  - name: lgtm
+    image: {{ .Values.observability.image }}
+    ports:
+    - containerPort: {{ .Values.observability.ports.grafana }}
+      name: grafana
+    - containerPort: {{ .Values.observability.ports.otelGrpc }}
+      name: otel-grpc
+    - containerPort: {{ .Values.observability.ports.otelHttp }}
+      name: otel-http
+    - containerPort: {{ .Values.observability.ports.prometheus }}
+      name: prometheus
+    env:
+    - name: OTEL_TRACES_EXPORTER
+      value: "otlp"
+    livenessProbe:
+      httpGet:
+        path: /api/health
+        port: grafana
+      initialDelaySeconds: 30
+      periodSeconds: 10
+    readinessProbe:
+      httpGet:
+        path: /api/health
+        port: grafana
+      initialDelaySeconds: 5
+      periodSeconds: 5
+  restartPolicy: Always

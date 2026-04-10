@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "fullstack.fullname" . }}-web
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "fullstack.labels" . | nindent 4 }}
+    app: web
+spec:
+  replicas: {{ .Values.nginx.replicas }}
+  selector:
+    matchLabels:
+      {{- include "fullstack.selectorLabels" . | nindent 6 }}
+      app: web
+  template:
+    metadata:
+      labels:
+        {{- include "fullstack.selectorLabels" . | nindent 8 }}
+        app: web
+    spec:
+      containers:
+      - name: nginx
+        image: {{ .Values.nginx.image }}
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: {{ .Values.nginx.port }}
+          name: http
+        volumeMounts:
+        - name: nginx-config
+          mountPath: /etc/nginx/conf.d
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 10
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 5
+          periodSeconds: 5
+      volumes:
+      - name: nginx-config
+        configMap:
+          name: {{ include "fullstack.fullname" . }}-nginx-config
+      initContainers:
+      - name: wait-for-app
+        image: busybox:latest
+        command: ['sh', '-c', 'until nc -z app 9000; do echo waiting for app; sleep 2; done']
