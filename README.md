@@ -113,8 +113,8 @@ make down
 |---------|-----|
 | Login Form | [http://localhost:8080/login](http://localhost:8080/login) |
 | Legacy App | [http://localhost:8080/game/index](http://localhost:8080/game/index) |
-| React App | [http://localhost:5173](http://localhost:5173) (dev with HMR) |
-| React App | [http://localhost:8080/spa](http://localhost:8080/spa) (production) |
+| React App (dev with HMR) | [http://localhost:5173](http://localhost:5173) |
+| React App (production build) | [http://localhost:8080/spa](http://localhost:8080/spa) |
 
 **Backend & API**
 | Service | URL | Credentials |
@@ -131,9 +131,10 @@ make down
 **Data & Infrastructure**
 | Service | URL | Credentials |
 |---------|-----|-------------|
-| Database (Adminer) | [http://localhost:8085](http://localhost:8085) | root:secret |
-| Redis Cache | [http://localhost:5540](http://localhost:5540) | — |
-| RabbitMQ | [http://localhost:15672](http://localhost:15672) | guest:guest |
+| Database (Adminer UI) | [http://localhost:8085](http://localhost:8085) | root:secret |
+| Redis Cache UI | [http://localhost:5540](http://localhost:5540) | — |
+| RabbitMQ Management | [http://localhost:15672](http://localhost:15672) | guest:guest |
+| OpenTelemetry Collector | localhost:4317 (gRPC), localhost:4318 (HTTP) | — |
 | Documentation | [http://localhost:8005](http://localhost:8005) | — |
 
 ## Quality Assurance & Development
@@ -164,23 +165,25 @@ make shell           # Shell access to PHP container
 **Install with Helm:**
 
 ```sh
-helm install app ./helm/app
+# Install all services with single unified chart
+helm install myapp ./helm \
+  -n myapp-ns \
+  --create-namespace
 
-# or with 2 replicas (Pods) each:
-helm install app ./helm/app --set frontend.replicas=2 --set backend.replicas=2
-
-# for telemetry:
-helm install telemetry ./helm/telemetry
+# Verify deployment
+kubectl get pods -n myapp-ns
 ```
 
 **Access Services**
-| Service | Internal | Local |
-|---------|----------|-------|
-| API | http://kubernetes.docker.internal:30100 | http://localhost:30100 |
-| Webapp | http://kubernetes.docker.internal:30200 | http://localhost:30200 |
-| Dashboard | http://kubernetes.docker.internal:30300 | http://localhost:30300 |
+| Service | Access |
+|---------|--------|
+| Web App | http://localhost:30080 |
+| Grafana | http://localhost:30300 |
+| Database | Inside cluster: `db:3306` |
+| Redis | Inside cluster: `cache:6379` |
+| RabbitMQ | Inside cluster: `rabbitmq:5672`, Management: http://localhost:15672 |
 
-See [helm](./helm/) for configuration details.
+See [helm/README.md](./helm/README.md) for configuration and production deployment guide.
 
 ## Learning & References
 
