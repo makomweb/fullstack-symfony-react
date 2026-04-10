@@ -16,12 +16,6 @@ app:
   image: fullstack-symfony-react:0.9.3
   port: 9000
   
-  # Symfony environment variables
-  env:
-    APP_ENV: prod
-    APP_DEBUG: "0"
-    MESSENGER_TRANSPORT_DSN: "amqp://rabbitmq:rabbitmq@rabbitmq:5672/%2f/messages"
-  
   # Admin credentials (change in production!)
   admin:
     email: "admin@example.com"

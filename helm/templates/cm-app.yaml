@@ -14,10 +14,10 @@ data:
   DATABASE_URL: "mysql://{{ .Values.database.env.MYSQL_USER }}:{{ .Values.database.env.MYSQL_PASSWORD }}@db:3306/{{ .Values.database.env.MYSQL_DATABASE }}?serverVersion=8.0&charset=utf8mb4"
   
   # Cache & Session Storage
-  REDIS_URL: "redis://cache:6379"
+  REDIS_URL: "redis://cache:{{ .Values.cache.port }}"
   
   # Message Queue
-  MESSENGER_TRANSPORT_DSN: {{ .Values.app.env.MESSENGER_TRANSPORT_DSN | quote }}
+  MESSENGER_TRANSPORT_DSN: "amqp://{{ .Values.rabbitmq.env.RABBITMQ_DEFAULT_USER }}:{{ .Values.rabbitmq.env.RABBITMQ_DEFAULT_PASS }}@rabbitmq:{{ .Values.rabbitmq.port }}/%2f/messages"
   
   # Application Secrets & Credentials
   APP_SECRET: {{ .Values.app.secret | quote }}
