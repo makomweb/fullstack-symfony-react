@@ -24,7 +24,9 @@ FROM php:8.4-fpm-alpine AS base-alpine
 
 WORKDIR /var/www/project
 
-RUN apk add --no-cache --virtual .build-deps \
+RUN apk add --no-cache \
+    icu-libs libzip rabbitmq-c \
+    && apk add --no-cache --virtual .build-deps \
     build-base autoconf icu-dev libzip-dev rabbitmq-c-dev \
     && docker-php-ext-configure intl \
     && docker-php-ext-install intl pdo opcache pdo_mysql zip \
