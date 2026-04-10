@@ -21,7 +21,7 @@ spec:
       containers:
       - name: nginx
         image: {{ .Values.nginx.image }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: {{ .Values.nginx.port }}
           name: http
@@ -29,14 +29,12 @@ spec:
         - name: nginx-config
           mountPath: /etc/nginx/conf.d
         livenessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: http
           initialDelaySeconds: 10
           periodSeconds: 10
         readinessProbe:
-          httpGet:
-            path: /
+          tcpSocket:
             port: http
           initialDelaySeconds: 5
           periodSeconds: 5
