@@ -25,13 +25,6 @@ spec:
         envFrom:
         - configMapRef:
             name: {{ include "fullstack.fullname" . }}-app-config
-        env:
-        - name: DATABASE_URL
-          value: "mysql://{{ .Values.database.env.MYSQL_USER }}:{{ .Values.database.env.MYSQL_PASSWORD }}@db:3306/{{ .Values.database.env.MYSQL_DATABASE }}"
-        - name: REDIS_URL
-          value: "redis://cache:6379"
-        - name: APP_SECRET
-          value: {{ .Values.app.secret | quote }}
       restartPolicy: Never
       initContainers:
       - name: wait-for-db

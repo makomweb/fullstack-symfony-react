@@ -27,16 +27,8 @@ spec:
         - configMapRef:
             name: {{ include "fullstack.fullname" . }}-app-config
         env:
-        - name: DATABASE_URL
-          value: "mysql://{{ .Values.database.env.MYSQL_USER }}:{{ .Values.database.env.MYSQL_PASSWORD }}@db:3306/{{ .Values.database.env.MYSQL_DATABASE }}"
-        - name: REDIS_URL
-          value: "redis://cache:6379"
-        - name: OTEL_EXPORTER_OTLP_ENDPOINT
-          value: "http://lgtm:{{ .Values.observability.ports.otelHttp }}"
-        - name: MESSENGER_TRANSPORT_DSN
-          value: {{ .Values.app.env.MESSENGER_TRANSPORT_DSN | quote }}
-        - name: APP_SECRET
-          value: {{ .Values.app.secret | quote }}
+        - name: OTEL_SERVICE_NAME
+          value: "worker"
       initContainers:
       - name: wait-for-db
         image: busybox:latest
