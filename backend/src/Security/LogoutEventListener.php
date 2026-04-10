@@ -2,10 +2,10 @@
 
 namespace App\Security;
 
+use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Routing\Generator\UrlGeneratorInterface;
 use Symfony\Component\Security\Http\Event\LogoutEvent;
-use Symfony\Component\EventDispatcher\Attribute\AsEventListener;
 
 /**
  * Listener that intercepts logout and redirects to login with preserved referrer
@@ -21,7 +21,7 @@ class LogoutEventListener
     public function __invoke(LogoutEvent $event): void
     {
         $request = $event->getRequest();
-        
+
         // Try to get the referrer to determine where user came from
         $referer = $request->headers->get('Referer');
         $targetPath = '/spa'; // Default to modern app

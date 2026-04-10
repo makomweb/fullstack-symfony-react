@@ -22,9 +22,9 @@ class CustomAuthenticationEntryPoint implements AuthenticationEntryPointInterfac
     {
         // Get the original URL that triggered the authentication requirement
         $targetPath = $request->getPathInfo();
-        
+
         // If we're already at /login, try to extract target from referrer or use /spa as fallback
-        if ($targetPath === '/login') {
+        if ('/login' === $targetPath) {
             $referer = $request->headers->get('Referer');
             if ($referer) {
                 // Parse the referrer URL to extract just the path
@@ -35,11 +35,11 @@ class CustomAuthenticationEntryPoint implements AuthenticationEntryPointInterfac
                 }
             }
             // Fallback to /spa
-            if ($targetPath === '/login') {
+            if ('/login' === $targetPath) {
                 $targetPath = '/spa';
             }
         }
-        
+
         // Build login URL with _target_path query parameter
         $loginUrl = $this->urlGenerator->generate('app.login', [
             '_target_path' => $targetPath,
@@ -47,12 +47,12 @@ class CustomAuthenticationEntryPoint implements AuthenticationEntryPointInterfac
 
         // Create a redirect response
         return new Response(
-            "<!DOCTYPE html>\n<html>\n<head>\n" .
-            "<meta charset=\"UTF-8\" />\n" .
-            "<meta http-equiv=\"refresh\" content=\"0;url='$loginUrl'\" />\n" .
-            "<title>Redirecting to login</title>\n" .
-            "</head>\n<body>\n" .
-            "Redirecting to <a href=\"$loginUrl\">login</a>.\n" .
+            "<!DOCTYPE html>\n<html>\n<head>\n".
+            "<meta charset=\"UTF-8\" />\n".
+            "<meta http-equiv=\"refresh\" content=\"0;url='$loginUrl'\" />\n".
+            "<title>Redirecting to login</title>\n".
+            "</head>\n<body>\n".
+            "Redirecting to <a href=\"$loginUrl\">login</a>.\n".
             "</body>\n</html>",
             302,
             ['Location' => $loginUrl]

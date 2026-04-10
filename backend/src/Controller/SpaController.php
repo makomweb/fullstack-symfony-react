@@ -11,7 +11,7 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 /**
  * Serves the React Single Page Application.
- * 
+ *
  * Behavior depends on APP_ENV:
  * - Development: Redirects to Vite dev server (http://vite:5173) for HMR
  * - Production: Serves pre-built assets from public/dist/
@@ -39,9 +39,9 @@ final class SpaController extends AbstractController
     public function index(string $reactRouting = ''): Response
     {
         // In development, redirect to Vite dev server for HMR
-        // if ('dev' === $this->environment) {
-        //     return new RedirectResponse("http://localhost:5173/", 307);
-        // }
+        if ('dev' === $this->environment) {
+            return new RedirectResponse('http://localhost:5173/', 307);
+        }
 
         // In production, serve the pre-built Vite index.html with injected env vars
         return $this->serveBuildOutput();
@@ -55,15 +55,20 @@ final class SpaController extends AbstractController
     private function serveBuildOutput(): Response
     {
         $projectDir = $this->getParameter('kernel.project_dir');
-        $viteIndexPath = $projectDir . '/public/dist/index.html';
+        if (!is_string($projectDir)) {
+            throw new \RuntimeException('kernel.project_dir parameter must be a string');
+        }
+
+        $viteIndexPath = $projectDir.'/public/dist/index.html';
 
         if (!file_exists($viteIndexPath)) {
-            throw $this->createNotFoundException(
-                'React app build not found. Run "npm run build" and copy dist/ to public/dist/'
-            );
+            throw $this->createNotFoundException('React app build not found. Run "npm run build" and copy dist/ to public/dist/');
         }
 
         $content = file_get_contents($viteIndexPath);
+        if (!is_string($content)) {
+            throw new \RuntimeException('Failed to read React app build');
+        }
 
         // Rewrite asset paths: /assets/ → /dist/assets/
         // Vite generates paths like /assets/index-HASH.js but they're actually at /dist/assets/
@@ -78,7 +83,7 @@ final class SpaController extends AbstractController
         );
 
         // Insert injection script before closing head tag
-        $content = str_replace('</head>', $injectionScript . '</head>', $content);
+        $content = str_replace('</head>', $injectionScript.'</head>', $content);
 
         return new Response($content, 200, ['Content-Type' => 'text/html; charset=utf-8']);
     }

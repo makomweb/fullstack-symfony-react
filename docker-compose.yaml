@@ -18,7 +18,10 @@ services:
 
     # php-fpm
     app:
-        image: ${APP_IMAGE}
+        build:
+            context: .
+            dockerfile: build/php/Dockerfile
+            target: dev
         ports:
             - "9000:9000"
         # not required on Windows:

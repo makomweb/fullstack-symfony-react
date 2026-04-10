@@ -6,7 +6,6 @@ use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\ParameterBag;
 use Symfony\Component\Routing\RouterInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -35,6 +34,7 @@ readonly class AuthenticationSuccessHandler implements AuthenticationSuccessHand
         // If a target path was provided in the request, use it
         if ($targetPath && ($this->isValidPath($targetPath) || $this->isValidUrl($targetPath))) {
             $this->logger->info('Redirecting to target path', ['target' => $targetPath]);
+
             return new RedirectResponse($targetPath);
         }
 
@@ -43,11 +43,13 @@ readonly class AuthenticationSuccessHandler implements AuthenticationSuccessHand
         if ($user && in_array('ROLE_ADMIN', $user->getRoles(), strict: true)) {
             $adminPath = $this->router->generate('admin');
             $this->logger->info('Redirecting admin to admin panel', ['path' => $adminPath]);
+
             return new RedirectResponse($adminPath);
         }
 
         $gamePath = $this->router->generate('app.index_games');
         $this->logger->info('Redirecting user to games', ['path' => $gamePath]);
+
         return new RedirectResponse($gamePath);
     }
 
@@ -55,12 +57,14 @@ readonly class AuthenticationSuccessHandler implements AuthenticationSuccessHand
     {
         // Check POST first (from form submission)
         $targetPath = $request->request->get('_target_path');
-        if ($targetPath) {
+        if ($targetPath && is_string($targetPath)) {
             return $targetPath;
         }
 
         // Check query string as fallback
-        return $request->query->get('_target_path');
+        $targetPath = $request->query->get('_target_path');
+
+        return is_string($targetPath) ? $targetPath : null;
     }
 
     private function isValidPath(string $path): bool
