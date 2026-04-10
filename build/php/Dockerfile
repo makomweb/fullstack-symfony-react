@@ -1,3 +1,6 @@
+# -----------------------------------
+# Base-Stage (Development - Debian for XDebug)
+# -----------------------------------
 FROM php:8.4-fpm AS base
 
 WORKDIR /var/www/project
@@ -11,6 +14,24 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && apt-get remove --purge -y build-essential autoconf \
     && apt-get autoremove -y \
     && rm -rf /var/lib/apt/lists/*
+
+COPY build/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
+
+# -----------------------------------
+# Base-Alpine-Stage (Production - Alpine for smaller image)
+# -----------------------------------
+FROM php:8.4-fpm-alpine AS base-alpine
+
+WORKDIR /var/www/project
+
+RUN apk add --no-cache --virtual .build-deps \
+    build-base autoconf icu-dev libzip-dev rabbitmq-c-dev \
+    && docker-php-ext-configure intl \
+    && docker-php-ext-install intl pdo opcache pdo_mysql zip \
+    && pecl install opentelemetry redis amqp \
+    && docker-php-ext-enable opentelemetry redis amqp \
+    && apk del .build-deps \
+    && rm -rf /tmp/* /var/cache/apk/*
 
 COPY build/php/opcache.ini /usr/local/etc/php/conf.d/opcache.ini
 
@@ -75,10 +96,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # -----------------------------------
-# Production-Stage (no Composer, no XDebug)
-# Note: from vendor!
+# Production-Stage (Alpine - no Composer, no XDebug)
 # -----------------------------------
-FROM base AS prod
+FROM base-alpine AS prod
 
 COPY --from=vendor /var/www/project/vendor ./vendor
 
@@ -93,7 +113,3 @@ COPY backend/templates ./templates
 
 # Copy built React frontend from frontend stage
 COPY --from=frontend /var/www/project/frontend/dist ./public/dist
-
-#RUN mkdir -p var/cache var/log && chmod -R 777 var
-# The following might not be required once we have the shared cache - check it!
-#RUN mkdir var && chmod -R 777 var
