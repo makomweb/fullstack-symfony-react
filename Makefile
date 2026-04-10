@@ -3,7 +3,7 @@ VERSION = 0.9.2
 
 .DEFAULT_GOAL := help
 
-.PHONY: build dev prod backend-image frontend-image grafana up down reset \
+.PHONY: build dev prod backend-image grafana up down reset \
 	reset-worker reset-app init composer-install create-database create-schema \
 	load-fixtures init-test create-test-database create-test-schema composer shell \
 	qa sa cs test backend-test frontend-test arch clear cache-clear cache-pool-clear \
@@ -20,17 +20,13 @@ dev:
 	docker build . -f ./build/php/Dockerfile --target dev -t ${APP_NAME}-dev:${VERSION}
 	
 ## Build production images (without Docker cache)
-prod: backend-image frontend-image
+prod: backend-image
+
 
 ## Build backend image (without Docker cache)
 backend-image:
 	@echo "Build backend image"
 	docker build . -f ./build/php/Dockerfile --target prod --no-cache -t ${APP_NAME}:${VERSION}
-
-## Build frontend image (without Docker cache)
-frontend-image:
-	@echo "Build frontend image"
-	docker build . -f ./build/node/Dockerfile --target prod --no-cache -t ${APP_NAME}-web:${VERSION}
 
 grafana:
 	@echo "Build grafana image"
