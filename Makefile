@@ -44,8 +44,8 @@ up:
 down:
 	docker compose down
 
-## Reset all services
-reset: reset-worker reset-app
+## Reset worker, app, frontend
+reset: reset-worker reset-app reset-frontend
 
 ## Reset worker
 reset-worker:
@@ -56,6 +56,11 @@ reset-worker:
 reset-app:
 	@echo "Reset app"
 	docker compose restart app
+
+## Reset frontend (Vite development server)
+reset-frontend:
+	@echo "Reset frontend"
+	docker compose restart frontend
 
 ## Initialize project (install dependencies, create database, schema, load fixtures)
 init: composer-install frontend-build create-database create-schema load-fixtures
