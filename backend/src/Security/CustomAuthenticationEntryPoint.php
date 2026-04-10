@@ -18,7 +18,7 @@ class CustomAuthenticationEntryPoint implements AuthenticationEntryPointInterfac
     {
     }
 
-    public function start(Request $request, AuthenticationException $authException = null): Response
+    public function start(Request $request, ?AuthenticationException $authException = null): Response
     {
         // Get the original URL that triggered the authentication requirement
         $targetPath = $request->getPathInfo();

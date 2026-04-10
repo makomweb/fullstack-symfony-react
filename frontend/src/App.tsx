@@ -46,7 +46,7 @@ export default function App() {
     <CustomThemeProvider>
       <Notifier>
         <MyErrorBoundary>
-          <BrowserRouter basename="/spa">
+          <BrowserRouter basename={window.location.pathname.startsWith('/spa') ? '/spa' : '/'}>
             <AppContent />
           </BrowserRouter>
         </MyErrorBoundary>
