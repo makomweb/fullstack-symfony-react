@@ -34,11 +34,6 @@ final class SpaController extends AbstractController
             throw new \RuntimeException('Failed to read React app build');
         }
 
-        // Rewrite asset paths: /assets/ → /dist/assets/
-        // Vite generates relative paths /assets/* but they are served from /dist/assets/ by nginx
-        $content = str_replace('src="/assets/', 'src="/dist/assets/', $content);
-        $content = str_replace('href="/assets/', 'href="/dist/assets/', $content);
-
         return new Response($content, 200, ['Content-Type' => 'text/html; charset=utf-8']);
     }
 }
