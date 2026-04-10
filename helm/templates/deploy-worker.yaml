@@ -37,8 +37,11 @@ spec:
           value: {{ .Values.app.env.MESSENGER_TRANSPORT_DSN | quote }}
         - name: APP_SECRET
           value: {{ .Values.app.secret | quote }}
-      restartPolicy: Always
       initContainers:
+      - name: wait-for-db
+        image: busybox:latest
+        command: ['sh', '-c', 'until nc -z db 3306; do echo waiting for db; sleep 2; done']
       - name: wait-for-rabbitmq
         image: busybox:latest
         command: ['sh', '-c', 'until nc -z rabbitmq 5672; do echo waiting for rabbitmq; sleep 2; done']
+
