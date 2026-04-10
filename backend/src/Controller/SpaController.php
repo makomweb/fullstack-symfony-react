@@ -39,9 +39,9 @@ final class SpaController extends AbstractController
     public function index(string $reactRouting = ''): Response
     {
         // In development, redirect to Vite dev server for HMR
-        if ('dev' === $this->environment) {
-            return new RedirectResponse('http://localhost:5173/', 307);
-        }
+        // if ('dev' === $this->environment) {
+        //     return new RedirectResponse('http://localhost:5173/', 307);
+        // }
 
         // In production, serve the pre-built Vite index.html with injected env vars
         return $this->serveBuildOutput();

@@ -7,7 +7,7 @@ VERSION = 0.9.2
 	reset-worker reset-app init composer-install create-database create-schema \
 	load-fixtures init-test create-test-database create-test-schema composer shell \
 	qa sa cs test backend-test frontend-test arch clear cache-clear cache-pool-clear \
-	maintenance maintain show-composer-updates \
+	maintenance maintain show-composer-updates frontend-build \
 	update-composer-dependencies update-npm-dependencies coverage frontend-shell open help
 
 ## Start development environment (build images, start containers, init, open browser)
@@ -58,12 +58,17 @@ reset-app:
 	docker compose restart app
 
 ## Initialize project (install dependencies, create database, schema, load fixtures)
-init: composer-install create-database create-schema load-fixtures
+init: composer-install frontend-build create-database create-schema load-fixtures
 
 ## Install composer dependencies
 composer-install:
 	@echo "Install composer dependencies"
 	docker compose exec -it app composer install
+
+## Build frontend assets (Vite production build)
+frontend-build:
+	@echo "Build frontend assets to backend/public/dist"
+	docker compose run --rm frontend-build
 
 ## Create database
 create-database:

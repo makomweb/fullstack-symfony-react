@@ -151,6 +151,18 @@ services:
         networks:
             - fullstack-symfony-react
 
+    # Frontend build service: builds Vite assets for production/staging
+    # Runs once on startup, copies dist/ to backend/public/dist for serving
+    frontend-build:
+        image: ${NODE_IMAGE}
+        working_dir: /app
+        volumes:
+            - ./frontend:/app
+            - ./backend/public/dist:/dist-out
+        networks:
+            - fullstack-symfony-react
+        command: ["sh", "-c", "npm ci && npm run build && cp -r dist/* /dist-out/ && echo '✓ Frontend build complete'"]
+
     # React + Material UI frontend with Vite dev server for HMR
     frontend:
         image: ${NODE_IMAGE}
