@@ -1,5 +1,5 @@
 APP_NAME = fullstack-symfony-react
-VERSION = 0.9.2
+VERSION = 0.9.3
 
 .DEFAULT_GOAL := help
 

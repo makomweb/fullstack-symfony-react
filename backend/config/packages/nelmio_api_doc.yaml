@@ -3,7 +3,7 @@ nelmio_api_doc:
         info:
             title: Fullstack Symfony React
             description: Fullstack demo application
-            version: 0.9.2
+            version: 0.9.3
     areas:
         default:
             path_patterns: [^/api/games]
