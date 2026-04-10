@@ -1,16 +1,11 @@
 <!doctype html>
 <!--
-  Development Entry Point for Vite Dev Server (port 5173)
+  React SPA entry point.
   
-  Used ONLY during development when running: npm run dev
-  - Vite serves this file with Hot Module Reload (HMR) enabled
-  - Loads React app from /src/main.tsx (TypeScript source)
-  - Fast feedback loop with instant updates
+  Dev: Run `npm run dev` for Vite dev server with HMR (http://localhost:5173)
+  Prod: Built to dist/index.html, served by backend SpaController
   
-  Production Entry Point:
-  - SpaController reads the Vite-built dist/index.html
-  - Assets loaded from public/dist/ with hashed filenames
-  - No Twig template involved - pure Vite output
+  Environment variables injected by Vite plugin (dev) or SpaController (prod).
 -->
 <html lang="en">
   <head>
