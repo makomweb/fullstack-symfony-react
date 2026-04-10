@@ -10,7 +10,7 @@ spec:
   type: NodePort
   selector:
     {{- include "fullstack.selectorLabels" . | nindent 4 }}
-    app: web
+    app: app
   ports:
   - port: 80
     targetPort: http
