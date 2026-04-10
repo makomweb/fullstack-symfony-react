@@ -75,7 +75,7 @@ spec:
       - name: copy-app-files
         image: {{ .Values.app.image }}
         imagePullPolicy: Always
-        command: ['sh', '-c', 'cp -r /var/www/project/* /app-files/ && cp -r /var/www/project/.* /app-files/ 2>/dev/null || true']
+        command: ['sh', '-c', 'cp -r /var/www/project/. /app-files/']
         volumeMounts:
         - name: app-files
           mountPath: /app-files
