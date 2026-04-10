@@ -17,8 +17,8 @@ const { values } = parseArgs({
 
 const { indexPath } = values;
 
-// TODO: Check if this is obsolete due to the React app being served via backend?
-// TODO: Also check if this might be necessary for development though!
+// TODO (redesign): Check if this is obsolete due to the React app being served via backend?
+// TODO (redesign): Also check if this might be necessary for development though!
 fs.readFile(indexPath, "utf8", (err, data) => {
   if (err) {
     return console.error("Error reading index.html:", err);

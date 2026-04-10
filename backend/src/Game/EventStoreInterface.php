@@ -9,7 +9,6 @@ interface EventStoreInterface
     /** @return Event[] */
     public function getEvents(QueryOptions $options = new QueryOptions()): array;
 
-    // TODO return the event itself.
     public function persist(Event $event, bool $dontFlush = false): void;
 
     public function reset(): void;

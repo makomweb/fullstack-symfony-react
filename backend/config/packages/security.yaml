@@ -48,14 +48,9 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        # SPA routes require authenticated user
         - { path: ^/spa, roles: ROLE_USER }
-        # Game routes require authenticated user
         - { path: ^/game, roles: ROLE_USER }
-        # /api/me is needed by SPA to verify session on load (checkRememberMeAsync)
-        # TODO: Check if this is needed!
         - { path: ^/api/me, roles: PUBLIC_ACCESS }
-        # Future API routes (if needed) would require authentication
         - { path: ^/api, roles: ROLE_USER }
 
 when@test:
