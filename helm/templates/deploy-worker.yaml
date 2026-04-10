@@ -21,7 +21,7 @@ spec:
       containers:
       - name: worker
         image: {{ .Values.app.image }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         command: ["php", "bin/console", "messenger:consume", "async", "-vv"]
         envFrom:
         - configMapRef:

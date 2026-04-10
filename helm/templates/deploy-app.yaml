@@ -21,7 +21,7 @@ spec:
       containers:
       - name: app
         image: {{ .Values.app.image }}
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         ports:
         - containerPort: {{ .Values.app.port }}
           name: fpm
