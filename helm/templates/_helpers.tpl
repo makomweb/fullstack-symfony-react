@@ -1,7 +1,7 @@
 {{/*
 Expand the name of the chart.
 */}}
-{{- define "fullstack.name" -}}
+{{- define "chart.name" -}}
 {{- default .Chart.Name .Values.nameOverride | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
@@ -9,7 +9,7 @@ Expand the name of the chart.
 Create a default fully qualified app name.
 Uses minimal naming by just returning the chart name.
 */}}
-{{- define "fullstack.fullname" -}}
+{{- define "chart.fullname" -}}
 {{- if .Values.fullnameOverride }}
 {{- .Values.fullnameOverride | trunc 63 | trimSuffix "-" }}
 {{- else }}
@@ -20,16 +20,16 @@ Uses minimal naming by just returning the chart name.
 {{/*
 Create chart name and version as used by the chart label.
 */}}
-{{- define "fullstack.chart" -}}
+{{- define "chart.version" -}}
 {{- printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" | trunc 63 | trimSuffix "-" }}
 {{- end }}
 
 {{/*
 Common labels
 */}}
-{{- define "fullstack.labels" -}}
-helm.sh/chart: {{ include "fullstack.chart" . }}
-{{ include "fullstack.selectorLabels" . }}
+{{- define "chart.labels" -}}
+helm.sh/chart: {{ include "chart.version" . }}
+{{ include "chart.selectorLabels" . }}
 {{- if .Chart.AppVersion }}
 app.kubernetes.io/version: {{ .Chart.AppVersion | quote }}
 {{- end }}
@@ -39,7 +39,7 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Selector labels
 */}}
-{{- define "fullstack.selectorLabels" -}}
-app.kubernetes.io/name: {{ include "fullstack.name" . }}
+{{- define "chart.selectorLabels" -}}
+app.kubernetes.io/name: {{ include "chart.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}

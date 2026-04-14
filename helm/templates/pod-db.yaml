@@ -4,7 +4,7 @@ metadata:
   name: db
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "fullstack.labels" . | nindent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
     app: db
 spec:
   containers:
@@ -56,7 +56,7 @@ spec:
   # apiVersion: apps/v1
   # kind: StatefulSet
   # metadata:
-  #   name: {{ include "fullstack.fullname" . }}-db
+  #   name: {{ include "chart.fullname" . }}-db
   # spec:
   #   serviceName: db
   #   replicas: 1

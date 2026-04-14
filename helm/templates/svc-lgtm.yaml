@@ -4,12 +4,12 @@ metadata:
   name: lgtm
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "fullstack.labels" . | nindent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
     app: lgtm
 spec:
   type: ClusterIP
   selector:
-    {{- include "fullstack.selectorLabels" . | nindent 4 }}
+    {{- include "chart.selectorLabels" . | nindent 4 }}
     app: lgtm
   ports:
   - port: 3000

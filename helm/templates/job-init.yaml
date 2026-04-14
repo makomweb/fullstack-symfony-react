@@ -4,7 +4,7 @@ metadata:
   name: init
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "fullstack.labels" . | nindent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
     app: init
 spec:
   backoffLimit: 3

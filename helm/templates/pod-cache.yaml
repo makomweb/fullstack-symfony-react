@@ -4,7 +4,7 @@ metadata:
   name: cache
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "fullstack.labels" . | nindent 4 }}
+    {{- include "chart.labels" . | nindent 4 }}
     app: cache
 spec:
   containers:
