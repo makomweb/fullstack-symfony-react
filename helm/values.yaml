@@ -75,8 +75,11 @@ observability:
     otelGrpc: 4317
     otelHttp: 4318
     prometheus: 9090
-  
-  nodePort: 30300
+
+  nodePorts:
+    grafana: 30300
+    otelGrpc: 30317
+    otelHttp: 30318
 
 # Database Initialization Job
 init:

@@ -14,13 +14,15 @@ spec:
   ports:
   - port: 3000
     targetPort: grafana
-    nodePort: {{ .Values.observability.nodePort }}
+    nodePort: {{ .Values.observability.nodePorts.grafana }}
     name: grafana
   - port: 4317
     targetPort: otel-grpc
+    nodePort: {{ .Values.observability.nodePorts.otelGrpc }}
     name: otel-grpc
   - port: 4318
     targetPort: otel-http
+    nodePort: {{ .Values.observability.nodePorts.otelHttp }}
     name: otel-http
   - port: 9090
     targetPort: prometheus

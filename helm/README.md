@@ -34,6 +34,8 @@ kubectl get pods -n myapp-ns
 # Access the application
 # Web: http://localhost:30080
 # Grafana: http://localhost:30300 (login: admin/admin)
+# OTLP gRPC: localhost:30317
+# OTLP HTTP: http://localhost:30318
 ```
 
 ## Configuration
@@ -52,7 +54,9 @@ All configuration is in `values.yaml`. Key settings:
 - `rabbitmq.env.RABBITMQ_DEFAULT_PASS` - RabbitMQ password
 
 ### Observability
-- `observability.nodePort` - Port to access Grafana (default: 30300)
+- `observability.nodePorts.grafana` - Port to access Grafana (default: 30300)
+- `observability.nodePorts.otelGrpc` - Port to access OTLP gRPC (default: 30317)
+- `observability.nodePorts.otelHttp` - Port to access OTLP HTTP (default: 30318)
 
 ## ⚠️ Production Considerations
 
@@ -163,11 +167,17 @@ kubectl logs POD_NAME -n fullstack
 
 ### Access services
 ```bash
-# Port forward to web
-kubectl port-forward svc/web 8080:80 -n fullstack
+kubectl get svc -n fullstack
+
+# Access the app
+open http://localhost:30080
 
 # Access Grafana
-kubectl port-forward svc/lgtm 3000:3000 -n fullstack
+open http://localhost:30300
+
+# OTLP endpoints
+# gRPC: localhost:30317
+open http://localhost:30318
 ```
 
 ### Database initialization issues

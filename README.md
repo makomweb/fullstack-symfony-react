@@ -179,6 +179,8 @@ kubectl get pods -n myapp-ns
 |---------|--------|
 | Web App | http://localhost:30080 |
 | Grafana | http://localhost:30300 |
+| OTLP gRPC | localhost:30317 |
+| OTLP HTTP | http://localhost:30318 |
 | Database | Inside cluster: `db:3306` |
 | Redis | Inside cluster: `cache:6379` |
 | RabbitMQ | Inside cluster: `rabbitmq:5672`, Management: http://localhost:15672 |
