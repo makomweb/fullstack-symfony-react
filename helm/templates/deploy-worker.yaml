@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fullstack.fullname" . }}-worker
+  name: worker
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "fullstack.labels" . | nindent 4 }}
@@ -25,7 +25,7 @@ spec:
         command: ["php", "bin/console", "messenger:consume", "async", "-vv"]
         envFrom:
         - configMapRef:
-            name: {{ include "fullstack.fullname" . }}-app-config
+            name: app-config
         env:
         - name: OTEL_SERVICE_NAME
           value: "worker"

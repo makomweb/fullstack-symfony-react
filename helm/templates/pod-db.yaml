@@ -1,7 +1,7 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: {{ include "fullstack.fullname" . }}-db
+  name: db
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "fullstack.labels" . | nindent 4 }}

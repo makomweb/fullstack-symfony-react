@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "fullstack.fullname" . }}-app
+  name: app
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "fullstack.labels" . | nindent 4 }}
@@ -51,7 +51,7 @@ spec:
           mountPath: /var/www/project
         envFrom:
         - configMapRef:
-            name: {{ include "fullstack.fullname" . }}-app-config
+            name: app-config
         env:
         - name: OTEL_SERVICE_NAME
           value: "app"
@@ -68,7 +68,7 @@ spec:
       volumes:
       - name: nginx-config
         configMap:
-          name: {{ include "fullstack.fullname" . }}-nginx-config
+          name: nginx-config
       - name: app-files
         emptyDir: {}
       initContainers:

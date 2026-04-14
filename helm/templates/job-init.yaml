@@ -1,7 +1,7 @@
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "fullstack.fullname" . }}-init
+  name: init
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "fullstack.labels" . | nindent 4 }}
@@ -30,7 +30,7 @@ spec:
           echo "✓ Database initialization complete"
         envFrom:
         - configMapRef:
-            name: {{ include "fullstack.fullname" . }}-app-config
+            name: app-config
       restartPolicy: Never
       initContainers:
       - name: wait-for-db
