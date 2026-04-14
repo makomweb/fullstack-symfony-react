@@ -8,7 +8,6 @@ nginx:
   replicas: 1
   image: nginx:latest
   port: 80
-  nodePort: 30080
 
 # PHP Application Backend
 app:
@@ -75,11 +74,6 @@ observability:
     otelGrpc: 4317
     otelHttp: 4318
     prometheus: 9090
-
-  nodePorts:
-    grafana: 30300
-    otelGrpc: 30317
-    otelHttp: 30318
 
 # Database Initialization Job
 init:
