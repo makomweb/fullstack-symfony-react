@@ -25,6 +25,8 @@ spec:
           php bin/console doctrine:schema:update --force
           echo "Running database migrations..."
           php bin/console doctrine:migrations:migrate --no-interaction || true
+          echo "Loading fixtures..."
+          bin/console doctrine:fixtures:load -q
           echo "✓ Database initialization complete"
         envFrom:
         - configMapRef:
