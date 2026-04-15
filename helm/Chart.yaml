@@ -1,5 +1,5 @@
 apiVersion: v2
-name: fullstack
+name: fullstack # TODO Check name!
 description: Full-stack Symfony + React application with observability (LGTM)
 type: application
 version: 0.9.3

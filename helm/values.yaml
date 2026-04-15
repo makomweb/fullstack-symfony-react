@@ -74,6 +74,27 @@ observability:
     otelGrpc: 4317
     otelHttp: 4318
     prometheus: 9090
+  
+  # Grafana root URL - Set this when accessing Grafana through a path-based ingress
+  # Examples:
+  # - Ingress path: "http://localhost/grafana"
+  # - Root access: "http://localhost"
+  grafanaRootUrl: "http://localhost/grafana"
+
+# SPA Frontend Configuration
+spa:
+  # Backend API URL - Use absolute URL for external access
+  # Examples:
+  # - Local development with Ingress: "http://localhost/api"
+  # - Production: "https://example.com/api"
+  # - Internal Kubernetes: Use "/api" for same-host requests
+  backendApiUrl: "/api"
+  
+  # OpenTelemetry Collector Address - Where telemetry is sent
+  # Examples:
+  # - Internal Kubernetes: "http://lgtm:4318"
+  # - External via Ingress: "http://localhost/otel"
+  otelCollectorAddress: "http://localhost/otel"
 
 # Database Initialization Job
 init:

@@ -7,7 +7,8 @@ export async function fetchStatisticsAsync(
   if (gameId === "") {
     throw Error("Invalid game ID!");
   }
-  const url = new URL(`${BACKEND_API_URL}/games/${gameId}`);
+  const urlPath = `${BACKEND_API_URL}/games/${gameId}`;
+  const url = new URL(urlPath, window.location.origin);
   url.searchParams.append("from_cache", "yes");
 
   const response = await fetch(url, {

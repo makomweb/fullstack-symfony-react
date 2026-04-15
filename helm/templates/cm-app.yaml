@@ -24,9 +24,14 @@ data:
   ADMIN_EMAIL: {{ .Values.app.admin.email | quote }}
   ADMIN_PASSWORD: {{ .Values.app.admin.password | quote }}
   
+  # SPA Frontend Configuration
+  SPA_BACKEND_API_URL: {{ .Values.spa.backendApiUrl | quote }}
+  SPA_OTEL_COLLECTOR_ADDRESS: {{ .Values.spa.otelCollectorAddress | quote }}
+  
   # Telemetry & Observability
   APP_TELEMETRY: "Otel"
   OTEL_PHP_AUTOLOAD_ENABLED: "true"
   OTEL_TRACES_EXPORTER: "otlp"
   OTEL_EXPORTER_OTLP_ENDPOINT: "http://lgtm:{{ .Values.observability.ports.otelHttp }}"
+
 

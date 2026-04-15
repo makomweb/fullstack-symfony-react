@@ -52,3 +52,8 @@ services:
             - '%kernel.project_dir%'
         tags:
             - { name: data_collector, template: 'profiler/architecture.html.twig', id: 'app.architecture_collector' }
+
+    App\Controller\SpaController:
+        arguments:
+            $backendApiUrl: '%spa.backend_api_url%'
+            $otelCollectorAddress: '%spa.otel_collector_address%'
