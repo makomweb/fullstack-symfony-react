@@ -94,11 +94,6 @@ make up       # Start all services
 make open     # Open dashboard in browser
 ```
 
-**What's running?** 
-- Backend API at [http://localhost:8080](http://localhost:8080)
-- React UI at [http://localhost:5173](http://localhost:5173)
-- Monitoring at [http://localhost:3000](http://localhost:3000)
-
 **Stop everything:**
 ```sh
 make down
@@ -162,30 +157,37 @@ make shell           # Shell access to PHP container
 
 ## Kubernetes Deployment
 
-**Install with Helm:**
+**Prerequisites:**
+- Kubernetes cluster (e.g., Docker Desktop K8s, Minikube, EKS)
+- `kubectl` CLI
+- `helm` CLI
+
+**Deploy with Helm:**
 
 ```sh
-# Install all services with single unified chart
-helm install myapp ./helm \
-  -n myapp-ns \
-  --create-namespace
+# Install using Ingress-based networking (Recommended)
+helm install app ./helm
 
 # Verify deployment
-kubectl get pods -n myapp-ns
+kubectl get pods
+kubectl get ingress
 ```
 
-**Access Services**
-| Service | Access |
-|---------|--------|
-| Web App | http://localhost:30080 |
-| Grafana | http://localhost:30300 |
-| OTLP gRPC | localhost:30317 |
-| OTLP HTTP | http://localhost:30318 |
-| Database | Inside cluster: `db:3306` |
-| Redis | Inside cluster: `cache:6379` |
-| RabbitMQ | Inside cluster: `rabbitmq:5672`, Management: http://localhost:15672 |
+**Access Services via Ingress:**
+| Service | URL |
+|---------|-----|
+| App & API | [http://localhost/](http://localhost/) |
+| React SPA | [http://localhost/spa](http://localhost/spa) |
+| OpenTelemetry | [http://localhost/otel](http://localhost/otel) |
+| Grafana Dashboard | [http://localhost/grafana](http://localhost/grafana) |
 
-See [helm/README.md](./helm/README.md) for configuration and production deployment guide.
+**Internal Services (inside cluster):**
+- Database: `db:3306`
+- Redis: `cache:6379`
+- RabbitMQ: `rabbitmq:5672`
+
+**Configuration:**
+See [helm/README.md](./helm/README.md) for Helm chart configuration, customization, and production deployment.
 
 ## Learning & References
 

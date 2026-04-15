@@ -18,24 +18,17 @@ Consolidated Kubernetes deployment chart for the complete full-stack application
 ## Quick Start
 
 ```bash
-# Install the chart with release name 'myapp'
-helm install myapp ./helm \
-  -n myapp-ns \
-  --create-namespace
-
-# Or use different release name
-helm install production ./helm \
-  -n prod \
-  --create-namespace
+# Install the chart with release name 'app'
+helm install app ./helm
 
 # Verify deployment
-kubectl get pods -n myapp-ns
+kubectl get pods
+kubectl get ingress
 
-# Access the application
-# Web: http://localhost:30080
-# Grafana: http://localhost:30300 (login: admin/admin)
-# OTLP gRPC: localhost:30317
-# OTLP HTTP: http://localhost:30318
+# Access the application via Ingress
+# App: http://localhost
+# Grafana: http://localhost/grafana (login: admin/admin)
+# OTLP HTTP: http://localhost/otel
 ```
 
 ## Configuration
@@ -54,9 +47,9 @@ All configuration is in `values.yaml`. Key settings:
 - `rabbitmq.env.RABBITMQ_DEFAULT_PASS` - RabbitMQ password
 
 ### Observability
-- `observability.nodePorts.grafana` - Port to access Grafana (default: 30300)
-- `observability.nodePorts.otelGrpc` - Port to access OTLP gRPC (default: 30317)
-- `observability.nodePorts.otelHttp` - Port to access OTLP HTTP (default: 30318)
+- `observability.grafanaRootUrl` - Grafana root URL (default: "http://localhost/grafana")
+- `spa.backendApiUrl` - SPA backend API URL (default: "/api")
+- `spa.otelCollectorAddress` - OpenTelemetry collector address (default: "http://localhost/otel")
 
 ## ⚠️ Production Considerations
 
@@ -112,9 +105,8 @@ All configuration is in `values.yaml`. Key settings:
 
 If using private image registry:
 ```bash
-helm install fullstack ./helm/fullstack \
-  --set global.imageRegistry=your-registry.com \
-  -n fullstack
+helm install app ./helm \
+  --set global.imageRegistry=your-registry.com
 ```
 
 ### Secrets Management
@@ -123,11 +115,10 @@ For production, don't commit passwords to git. Use Kubernetes secrets:
 
 ```bash
 # Create secret
-kubectl create secret generic fullstack-secrets \
+kubectl create secret generic app-secrets \
   --from-literal=db-password=YOUR_DB_PASSWORD \
   --from-literal=mysql-root-password=YOUR_ROOT_PASSWORD \
-  --from-literal=app-secret=YOUR_APP_SECRET \
-  -n fullstack
+  --from-literal=app-secret=YOUR_APP_SECRET
 
 # Reference in values or deployment
 ```
@@ -160,42 +151,43 @@ For HA setup:
 
 ### Check deployment status
 ```bash
-kubectl get all -n fullstack
-kubectl describe pod POD_NAME -n fullstack
-kubectl logs POD_NAME -n fullstack
+kubectl get all
+kubectl describe pod POD_NAME
+kubectl logs POD_NAME
 ```
 
-### Access services
+### Access services via Ingress
 ```bash
-kubectl get svc -n fullstack
+kubectl get ingress
 
 # Access the app
-open http://localhost:30080
+open http://localhost
 
 # Access Grafana
-open http://localhost:30300
+open http://localhost/grafana
 
-# OTLP endpoints
-# gRPC: localhost:30317
-open http://localhost:30318
+# OpenTelemetry endpoints
+# gRPC: Inside cluster at lgtm:4317
+# HTTP: http://localhost/otel
 ```
 
 ### Database initialization issues
 ```bash
 # Check init job
-kubectl describe job fullstack-init -n fullstack
-kubectl logs job/fullstack-init -n fullstack
+kubectl describe job init
+kubectl logs job/init
 ```
 
 ## Uninstall
 
 ```bash
-helm uninstall fullstack -n fullstack
+helm uninstall app
 ```
 
 ## Support
 
 For issues, check:
-1. Logs: `kubectl logs -n fullstack`
-2. Events: `kubectl describe pod POD_NAME -n fullstack`
-3. Services connectivity: `kubectl exec POD_NAME -n fullstack -- nc -zv SERVICE_NAME:PORT`
+1. Logs: `kubectl logs POD_NAME`
+2. Events: `kubectl describe pod POD_NAME`
+3. Services connectivity: `kubectl exec POD_NAME -- nc -zv SERVICE_NAME:PORT`
+4. Ingress routing: `kubectl get ingress` and `curl -v http://localhost/`
