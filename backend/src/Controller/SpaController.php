@@ -47,11 +47,15 @@ final class SpaController extends AbstractController
             $content
         );
 
+        assert(is_string($content), new \RuntimeException('Failed to configure "BACKEND_API_URL"!'));
+
         $content = preg_replace(
             '/<script>window\.OTEL_COLLECTOR_ADDRESS\s*=\s*[^;]+;<\/script>/',
             sprintf('<script>window.OTEL_COLLECTOR_ADDRESS = %s;</script>', json_encode($this->otelCollectorAddress)),
             $content
         );
+
+        assert(is_string($content), new \RuntimeException('Failed to configure "OTEL_COLLECTOR_ADDRESS"!'));
 
         return new Response($content, 200, ['Content-Type' => 'text/html; charset=utf-8']);
     }
