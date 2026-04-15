@@ -1,0 +1,10 @@
+apiVersion: v2
+name: fullstack # TODO Check name!
+description: Full-stack Symfony + React application with observability (LGTM)
+type: application
+version: 0.9.3
+appVersion: "0.9.3"
+
+maintainers:
+  - name: Development Team
+    email: dev@example.com

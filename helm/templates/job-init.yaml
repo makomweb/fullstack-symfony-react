@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: init
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+    app: init
+spec:
+  backoffLimit: 3
+  template:
+    spec:
+      containers:
+      - name: init
+        image: {{ .Values.app.image }}
+        imagePullPolicy: Always
+        command:
+        - sh
+        - -c
+        - |
+          set -e
+          echo "Creating database..."
+          php bin/console doctrine:database:create --if-not-exists
+          echo "Creating schema..."
+          php bin/console doctrine:schema:update --force
+          echo "Running database migrations..."
+          php bin/console doctrine:migrations:migrate --no-interaction || true
+          echo "Loading fixtures..."
+          bin/console doctrine:fixtures:load -q
+          echo "✓ Database initialization complete"
+        envFrom:
+        - configMapRef:
+            name: app-config
+      restartPolicy: Never
+      initContainers:
+      - name: wait-for-db
+        image: busybox:latest
+        command: ['sh', '-c', 'until nc -z db 3306; do echo waiting for db; sleep 2; done']
+  ttlSecondsAfterFinished: 300

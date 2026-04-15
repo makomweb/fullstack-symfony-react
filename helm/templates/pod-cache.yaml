@@ -1,0 +1,45 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: cache
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+    app: cache
+spec:
+  containers:
+  - name: redis
+    image: {{ .Values.cache.image }}
+    ports:
+    - containerPort: {{ .Values.cache.port }}
+      name: redis
+    livenessProbe:
+      exec:
+        command:
+        - redis-cli
+        - ping
+      initialDelaySeconds: 5
+      periodSeconds: 10
+    readinessProbe:
+      exec:
+        command:
+        - redis-cli
+        - ping
+      initialDelaySeconds: 5
+      periodSeconds: 10
+  restartPolicy: Always
+
+  # DOCUMENTATION:
+  # For PRODUCTION use StatefulSet instead of Pod!
+  # 
+  # This Pod is ephemeral - Redis data is lost on pod restart.
+  # 
+  # Production setup should use:
+  # 1. StatefulSet with persistent storage
+  # 2. PersistentVolume (PV) for Redis persistence
+  # 3. PersistentVolumeClaim (PVC)
+  # 
+  # Also consider:
+  # - Redis Cluster for high availability
+  # - Redis Sentinel for failover
+  # - Using managed Redis services (AWS ElastiCache, GCP Memorystore, etc.)

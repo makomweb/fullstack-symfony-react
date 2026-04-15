@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-datasources
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+data:
+  default.yml: |
+    apiVersion: 1
+    datasources:
+    - name: Loki
+      type: loki
+      uid: PEF36D7C306617170
+      access: proxy
+      url: http://localhost:3100
+
+    - name: Prometheus
+      type: prometheus
+      uid: prometheus
+      access: proxy
+      url: http://localhost:9090
+      isDefault: false
+      jsonData:
+        httpMethod: GET
+        exemplarTraceIdDestinations:
+          - name: traceID
+            datasourceUid: tempo
+
+    - name: Tempo
+      type: tempo
+      uid: tempo
+      access: proxy
+      url: http://localhost:3200
+      isDefault: true
+      jsonData:
+        httpMethod: GET
+        serviceMap:
+          datasourceUid: prometheus
+        tracesToLogs:
+          datasourceUid: PEF36D7C306617170
+          tags: ['service.name']

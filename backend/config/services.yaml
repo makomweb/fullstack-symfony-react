@@ -8,6 +8,8 @@ parameters:
     app.telemetry: '%env(APP_TELEMETRY)%'
     admin.email: '%env(ADMIN_EMAIL)%'
     admin.password: '%env(ADMIN_PASSWORD)%'
+    spa.backend_api_url: '%env(string:SPA_BACKEND_API_URL)%'
+    spa.otel_collector_address: '%env(string:SPA_OTEL_COLLECTOR_ADDRESS)%'
 
 services:
     # default configuration for services in *this* file
@@ -50,3 +52,8 @@ services:
             - '%kernel.project_dir%'
         tags:
             - { name: data_collector, template: 'profiler/architecture.html.twig', id: 'app.architecture_collector' }
+
+    App\Controller\SpaController:
+        arguments:
+            $backendApiUrl: '%spa.backend_api_url%'
+            $otelCollectorAddress: '%spa.otel_collector_address%'

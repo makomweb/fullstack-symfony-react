@@ -7,6 +7,12 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+/**
+ * API endpoint to check current user session.
+ * Used by frontend's checkRememberMeAsync() during app initialization.
+ * Required for session verification when user returns with remember-me cookie.
+ */
+// TODO (redesign): I don't think this is useful anymore. Check if we can remove it!
 #[Route('/api', name: 'api.')]
 class MeController extends AbstractController
 {
@@ -23,7 +29,6 @@ class MeController extends AbstractController
 
         return $this->json([
             'user' => $user->getUserIdentifier(),
-            // TODO: list roles, permissions, created tokens etc.
         ]);
     }
 }

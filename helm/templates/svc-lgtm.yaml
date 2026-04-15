@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: lgtm
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+    app: lgtm
+spec:
+  type: ClusterIP
+  selector:
+    {{- include "chart.selectorLabels" . | nindent 4 }}
+    app: lgtm
+  ports:
+  - port: 3000
+    targetPort: grafana
+    name: grafana
+  - port: 4317
+    targetPort: otel-grpc
+    name: otel-grpc
+  - port: 4318
+    targetPort: otel-http
+    name: otel-http
+  - port: 9090
+    targetPort: prometheus
+    name: prometheus
+  - port: 15672
+    targetPort: management
+    name: rabbitmq-management

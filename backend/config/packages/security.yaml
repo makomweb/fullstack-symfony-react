@@ -16,15 +16,18 @@ security:
         main:
             lazy: true
             provider: app_user_provider
-            json_login:
-                login_path: api.login
-                check_path: api.login
-                username_path: email
-                password_path: password
+            entry_point: App\Security\CustomAuthenticationEntryPoint
             form_login:
                 login_path: app.login
                 check_path: app.login
                 enable_csrf: true
+                success_handler: App\Security\AuthenticationSuccessHandler
+                # Symfony's built-in target path parameter for post-login redirects
+                # When login form includes _target_path, user is redirected there after successful auth
+                target_path_parameter: _target_path
+                # Default fallback if no _target_path is provided
+                # Users are now redirected to the modern React SPA by default
+                default_target_path: /spa
             remember_me:
                 secret: '%kernel.secret%'
                 lifetime: 604800 # 1 week in seconds
@@ -33,8 +36,7 @@ security:
                 name: REMEMBERME
             logout:
                 path: app.logout
-                # where to redirect after logout
-                # target: app_any_route
+                target: app.login
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#the-firewall
@@ -46,8 +48,7 @@ security:
     # Note: Only the *first* access control that matches will be used
     access_control:
         - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
-        - { path: ^/login, roles: PUBLIC_ACCESS }
+        - { path: ^/spa, roles: ROLE_USER }
         - { path: ^/game, roles: ROLE_USER }
         - { path: ^/api/me, roles: PUBLIC_ACCESS }
         - { path: ^/api, roles: ROLE_USER }

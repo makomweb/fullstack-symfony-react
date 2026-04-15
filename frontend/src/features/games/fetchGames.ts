@@ -2,7 +2,8 @@ import { BACKEND_API_URL } from "../../config/env";
 import { ErrorResponseType, GameType } from "./types";
 
 export async function fetchGamesAsync(): Promise<GameType[]> {
-  const url = new URL(`${BACKEND_API_URL}/games`);
+  const urlPath = `${BACKEND_API_URL}/games`;
+  const url = new URL(urlPath, window.location.origin);
   url.searchParams.append("from_cache", "yes");
 
   const response = await fetch(url, { method: "GET", credentials: "include" });

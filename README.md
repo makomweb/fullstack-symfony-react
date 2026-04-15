@@ -17,7 +17,8 @@ monitoring and observability.
 ### Tech Stack
 | Layer | Technology |
 |-------|-----------|
-| Frontend | React 19 + MUI |
+| Frontend (modern) | React 19 + MUI |
+| Frontend (legacy) | Symfony 8 + TWIG + Bootstrap
 | Backend | PHP 8.4 + Symfony 8 |
 | Database | MySQL 8 |
 | DevOps | Docker, Kubernetes, Helm, Open Telemetry, Grafana |
@@ -32,75 +33,45 @@ monitoring and observability.
 ## System Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           Client Layer                                  │
-├─────────────────────────────────────────────────────────────────────────┤
-│                                                                         │
-│  ┌──────────────────┐              ┌──────────────────┐                 │
-│  │   React UI       │              │   Classic UI     │                 │
-│  │  (Modern)        │              │  (Legacy)        │                 │
-│  │  Port 8090       │              │  Port 8080       │                 │
-│  └────────┬─────────┘              └────────┬─────────┘                 │
-│           │                                  │                          │
-└───────────┼──────────────────────────────────┼──────────────────────────┘
-            │                                  │
-            └──────────────────┬───────────────┘
-                               │
-┌──────────────────────────────▼───────────────────────────────────────────┐
-│                        API Gateway Layer                                 │
+┌──────────────────────────────────────────────────────────────────────────┐
+│                           Client Layer                                   │
 ├──────────────────────────────────────────────────────────────────────────┤
 │                                                                          │
-│              ┌─────────────────────────────────────┐                     │
-│              │   Nginx (Reverse Proxy)             │                     │
-│              │   Port 8080                         │                     │
-│              └─────────────────────────────────────┘                     │
-│                               │                                          │
-└───────────────────────────────┼──────────────────────────────────────────┘
-                                │
-┌───────────────────────────────▼──────────────────────────────────────────┐
-│                      Backend Application Layer                           │
-├──────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌────────────────────────────────────────────────────────────┐          │
-│  │  PHP 8.4 + Symfony 8 Application                           │          │
-│  │  - REST API Endpoints                                      │          │
-│  │  - Business Logic                                          │          │
-│  │  - Event Sourcing                                          │          │
-│  └────────┬──────────────────┬─────────────┬──────────────────┘          │
-│           │                  │             │                             │
-└───────────┼──────────────────┼─────────────┼─────────────────────────────┘
+│  ┌──────────────────┐  ┌──────────────────┐  ┌──────────────────┐        │
+│  │   React UI       │  │   Legacy UI      │  │   Login Form     │        │
+│  │  (Modern SPA)    │  │  (TWIG / Game)   │  │  (TWIG Template) │        │
+│  │  Port 5173       │  │  Port 8080       │  │  Port 8080       │        │
+│  │  (dev via Vite)  │  │  (via SpaCtrl)   │  │  (via Backend)   │        │
+│  └────────┬─────────┘  └────────┬─────────┘  └────────┬─────────┘        │
+│           │                     │                     │                  │
+└───────────┼─────────────────────┼─────────────────────┼──────────────────┘
+            │                     │                     │
+            └─────────────────────┴─────────┬───────────┘
+                                            │
+┌───────────────────────────────────────────▼────────────────────────────────┐
+│                      Backend (Port 8080)                                   │
+├────────────────────────────────────────────────────────────────────────────┤
+│                                                                            │
+│  ┌──────────────────────────────────────────────────────────────┐          │
+│  │  PHP 8.4 + Symfony 8 Application                             │          │
+│  │  - SpaController (React app for authenticated users)         │          │
+│  │  - Game Routes (Legacy UI endpoints)                         │          │
+│  │  - REST API Endpoints                                        │          │
+│  │  - Business Logic & Event Sourcing                           │          │
+│  │  - Session-based Authentication                              │          │
+│  └────────┬──────────────────┬─────────────┬────────────────────┘          │
+│           │                  │             │                               │
+└───────────┼──────────────────┼─────────────┼───────────────────────────────┘
             │                  │             │
-    ┌───────▼──────┐   ┌──────▼────────┐  ┌─▼──────────────┐
+    ┌───────▼──────┐   ┌───────▼───────┐  ┌──▼─────────────┐
     │              │   │               │  │                │
     │   Database   │   │  Redis Cache  │  │ Message Queue  │
     │   MySQL 8    │   │               │  │ (Messenger)    │
-    │   Port 3306  │   │   Port 6379   │  │ - Async Tasks  │
-    │              │   │               │  │ - Background   │
-    │   Events &   │   │  - Sessions   │  │   Jobs         │
-    │   Data       │   │  - Cache      │  │                │
+    │   Port 3306  │   │   Port 6379   │  │                │
+    │              │   │               │  │                │
+    │   Events &   │   │  - Sessions   │  │ - Async Tasks  │
+    │   Data       │   │  - Cache      │  │ - Background   │
     └──────────────┘   └───────────────┘  └────────────────┘
-                                                    │
-                                           ┌────────▼──────────┐
-                                           │ Background Worker │
-                                           │ (Messenger)       │
-                                           │ - Process Events  │
-                                           │ - Async Tasks     │
-                                           └───────────────────┘
-
-┌──────────────────────────────────────────────────────────────────────────┐
-│                    Observability Layer (LGTM Stack)                      │
-├──────────────────────────────────────────────────────────────────────────┤
-│                                                                          │
-│  ┌────────────┐  ┌─────────┐  ┌─────────────┐  ┌─────────┐               │
-│  │ Logs       │  │ Traces  │  │ Metrics     │  │Grafana  │               │
-│  │ (Loki)     │  │ (Tempo) │  │ (Prometheus)│  │Dashboard│               │
-│  │ Port 3100  │  │ 3200    │  │ 9090        │  │3000     │               │
-│  └────────────┘  └─────────┘  └─────────────┘  └─────────┘               │
-│        ▲             ▲             ▲                                     │
-│        └─────────────┴─────────────┘                                     │
-│              OpenTelemetry Collector (Port 4317/4318)                    │
-│                                                                          │
-└──────────────────────────────────────────────────────────────────────────┘
 ```
 
 ## Prerequisites
@@ -123,11 +94,6 @@ make up       # Start all services
 make open     # Open dashboard in browser
 ```
 
-**What's running?** 
-- Backend API at [http://localhost:8080](http://localhost:8080)
-- React UI at [http://localhost:8090](http://localhost:8090)
-- Monitoring at [http://localhost:3000](http://localhost:3000)
-
 **Stop everything:**
 ```sh
 make down
@@ -138,10 +104,12 @@ make down
 ## Services & Access Points
 
 **Frontend**
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| Classic UI | [http://localhost:8080](http://localhost:8080) | — |
-| React UI | [http://localhost:8090](http://localhost:8090) | — |
+| Service | URL |
+|---------|-----|
+| Login Form | [http://localhost:8080/login](http://localhost:8080/login) |
+| Legacy App | [http://localhost:8080/game/index](http://localhost:8080/game/index) |
+| React App (dev with HMR) | [http://localhost:5173](http://localhost:5173) |
+| React App (production build) | [http://localhost:8080/spa](http://localhost:8080/spa) |
 
 **Backend & API**
 | Service | URL | Credentials |
@@ -151,16 +119,17 @@ make down
 | Admin UI | [http://localhost:8080/admin](http://localhost:8080/admin) | admin@example.com:secret |
 
 **Monitoring & Observability**
-| Service | URL | Credentials |
-|---------|-----|-------------|
-| Grafana Dashboard | [http://localhost:3000](http://localhost:3000) (Docker Compose) or [http://kubernetes.docker.internal:30300](http://kubernetes.docker.internal:30300) (Kubernetes) | — |
+| Service | URL |
+|---------|-----|
+| Grafana Dashboard | [http://localhost:3000](http://localhost:3000) |
 
 **Data & Infrastructure**
 | Service | URL | Credentials |
 |---------|-----|-------------|
-| Database (Adminer) | [http://localhost:8085](http://localhost:8085) | root:secret |
-| Redis Cache | [http://localhost:5540](http://localhost:5540) | — |
-| RabbitMQ | [http://localhost:15672](http://localhost:15672) | guest:guest |
+| Database (Adminer UI) | [http://localhost:8085](http://localhost:8085) | root:secret |
+| Redis Cache UI | [http://localhost:5540](http://localhost:5540) | — |
+| RabbitMQ Management | [http://localhost:15672](http://localhost:15672) | guest:guest |
+| OpenTelemetry Collector | localhost:4317 (gRPC), localhost:4318 (HTTP) | — |
 | Documentation | [http://localhost:8005](http://localhost:8005) | — |
 
 ## Quality Assurance & Development
@@ -188,26 +157,37 @@ make shell           # Shell access to PHP container
 
 ## Kubernetes Deployment
 
-**Install with Helm:**
+**Prerequisites:**
+- Kubernetes cluster (e.g., Docker Desktop K8s, Minikube, EKS)
+- `kubectl` CLI
+- `helm` CLI
+
+**Deploy with Helm:**
 
 ```sh
-helm install app ./helm/app
+# Install using Ingress-based networking (Recommended)
+helm install app ./helm
 
-# or with 2 replicas (Pods) each:
-helm install app ./helm/app --set frontend.replicas=2 --set backend.replicas=2
-
-# for telemetry:
-helm install telemetry ./helm/telemetry
+# Verify deployment
+kubectl get pods
+kubectl get ingress
 ```
 
-**Access Services**
-| Service | Internal | Local |
-|---------|----------|-------|
-| API | http://kubernetes.docker.internal:30100 | http://localhost:30100 |
-| Webapp | http://kubernetes.docker.internal:30200 | http://localhost:30200 |
-| Dashboard | http://kubernetes.docker.internal:30300 | http://localhost:30300 |
+**Access Services via Ingress:**
+| Service | URL |
+|---------|-----|
+| App & API | [http://localhost/](http://localhost/) |
+| React SPA | [http://localhost/spa](http://localhost/spa) |
+| OpenTelemetry | [http://localhost/otel](http://localhost/otel) |
+| Grafana Dashboard | [http://localhost/grafana](http://localhost/grafana) |
 
-See [helm](./helm/) for configuration details.
+**Internal Services (inside cluster):**
+- Database: `db:3306`
+- Redis: `cache:6379`
+- RabbitMQ: `rabbitmq:5672`
+
+**Configuration:**
+See [helm/README.md](./helm/README.md) for Helm chart configuration, customization, and production deployment.
 
 ## Learning & References
 

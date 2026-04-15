@@ -30,6 +30,7 @@
     - ✅ [Loki](https://grafana.com/oss/loki/) for logging
     - ✅ [Tempo](https://grafana.com/oss/tempo/) for tracing
     - ✅ [Prometheus](https://prometheus.io/) for metrics
+    - ✅ use LGTM all in one solution from Grafana
 - ✅ [CI via Github actions](https://docs.github.com/en/actions/about-github-actions/about-continuous-integration-with-github-actions)
     - ✅ PhpUnit 13
     - ✅ Vitest

@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 4,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -41,7 +41,7 @@
               },
               {
                 "color": "red",
-                "value": 400
+                "value": 80
               }
             ]
           }
@@ -49,12 +49,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 3,
+        "h": 5,
+        "w": 5,
         "x": 0,
         "y": 0
       },
-      "id": 8,
+      "id": 2,
       "options": {
         "minVizHeight": 75,
         "minVizWidth": 75,
@@ -78,17 +78,14 @@
             "uid": "prometheus"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
+          "editorMode": "builder",
           "expr": "command_executed_milliseconds",
-          "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
-          "instant": true,
-          "interval": "",
-          "legendFormat": "Command executed (ms)",
-          "range": false,
-          "refId": "Command executed (ms)",
+          "instant": false,
+          "legendFormat": "Executed (ms)",
+          "range": true,
+          "refId": "A",
           "useBackend": false
         },
         {
@@ -97,20 +94,18 @@
             "uid": "prometheus"
           },
           "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
+          "editorMode": "builder",
           "expr": "message_handled_milliseconds",
-          "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
-          "instant": true,
-          "legendFormat": "Command executed (ms)",
-          "range": false,
-          "refId": "Message handled (ms)",
+          "instant": false,
+          "legendFormat": "Handled (ms)",
+          "range": true,
+          "refId": "B",
           "useBackend": false
         }
       ],
-      "title": "",
+      "title": "Metrics",
       "type": "gauge"
     },
     {
@@ -132,163 +127,6 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
-            "hideFrom": {
-              "legend": false,
-              "tooltip": false,
-              "viz": false
-            },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
-            "lineWidth": 1,
-            "pointSize": 5,
-            "scaleDistribution": {
-              "type": "linear"
-            },
-            "showPoints": "auto",
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
-            },
-            "thresholdsStyle": {
-              "mode": "off"
-            }
-          },
-          "fieldMinMax": false,
-          "mappings": [],
-          "thresholds": {
-            "mode": "percentage",
-            "steps": [
-              {
-                "color": "green",
-                "value": null
-              },
-              {
-                "color": "red",
-                "value": 2000
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #Message handled (ms)"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-orange",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #Command executed (ms)"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
-      },
-      "gridPos": {
-        "h": 6,
-        "w": 9,
-        "x": 3,
-        "y": 0
-      },
-      "id": 9,
-      "options": {
-        "legend": {
-          "calcs": [],
-          "displayMode": "list",
-          "placement": "bottom",
-          "showLegend": true
-        },
-        "tooltip": {
-          "hideZeros": false,
-          "mode": "single",
-          "sort": "none"
-        }
-      },
-      "pluginVersion": "11.4.0",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "command_executed_milliseconds",
-          "format": "time_series",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "interval": "",
-          "legendFormat": "Command executed (ms)",
-          "range": true,
-          "refId": "Command executed (ms)",
-          "useBackend": false
-        },
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "prometheus"
-          },
-          "disableTextWrap": false,
-          "editorMode": "code",
-          "exemplar": false,
-          "expr": "message_handled_milliseconds",
-          "format": "time_series",
-          "fullMetaSearch": false,
-          "includeNullMetadata": true,
-          "instant": false,
-          "legendFormat": "Message handled (ms)",
-          "range": true,
-          "refId": "Message handled (ms)",
-          "useBackend": false
-        }
-      ],
-      "title": "",
-      "type": "timeseries"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "prometheus"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "mode": "palette-classic"
-          },
-          "custom": {
-            "axisBorderShow": false,
-            "axisCenteredZero": false,
-            "axisColorMode": "text",
-            "axisGridShow": false,
-            "axisLabel": "",
-            "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 1,
-            "drawStyle": "line",
             "fillOpacity": 100,
             "gradientMode": "opacity",
             "hideFrom": {
@@ -307,7 +145,7 @@
               "type": "linear"
             },
             "showPoints": "never",
-            "spanNulls": false,
+            "spanNulls": true,
             "stacking": {
               "group": "A",
               "mode": "percent"
@@ -331,121 +169,15 @@
             ]
           }
         },
-        "overrides": [
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "success"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "server-error"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "client-error"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-orange",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #success"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-green",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #client_error"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-yellow",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "Value #server_error"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          },
-          {
-            "matcher": {
-              "id": "byName",
-              "options": "5xx"
-            },
-            "properties": [
-              {
-                "id": "color",
-                "value": {
-                  "fixedColor": "dark-red",
-                  "mode": "fixed"
-                }
-              }
-            ]
-          }
-        ]
+        "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 12,
-        "x": 12,
+        "h": 5,
+        "w": 19,
+        "x": 5,
         "y": 0
       },
-      "id": 7,
+      "id": 1,
       "options": {
         "legend": {
           "calcs": [],
@@ -454,8 +186,7 @@
           "showLegend": true
         },
         "tooltip": {
-          "hideZeros": false,
-          "mode": "none",
+          "mode": "single",
           "sort": "none"
         }
       },
@@ -467,16 +198,15 @@
             "uid": "prometheus"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "exemplar": false,
+          "editorMode": "code",
           "expr": "my_http_response_total{message=\"success\"}",
-          "format": "time_series",
           "fullMetaSearch": false,
+          "hide": false,
           "includeNullMetadata": true,
           "instant": false,
-          "legendFormat": "success",
+          "legendFormat": "2xx",
           "range": true,
-          "refId": "success",
+          "refId": "success (2xx)",
           "useBackend": false
         },
         {
@@ -485,16 +215,14 @@
             "uid": "prometheus"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "exemplar": false,
+          "editorMode": "code",
           "expr": "my_http_response_total{message=\"client_error\"}",
-          "format": "time_series",
           "fullMetaSearch": false,
           "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "4xx",
           "range": true,
-          "refId": "client_error",
+          "refId": "client_error (4xx)",
           "useBackend": false
         },
         {
@@ -503,16 +231,15 @@
             "uid": "prometheus"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
-          "exemplar": false,
+          "editorMode": "code",
           "expr": "my_http_response_total{message=\"server_error\"}",
-          "format": "time_series",
           "fullMetaSearch": false,
+          "hide": false,
           "includeNullMetadata": true,
           "instant": false,
           "legendFormat": "5xx",
           "range": true,
-          "refId": "server_error",
+          "refId": "server_error (5xx)",
           "useBackend": false
         }
       ],
@@ -522,30 +249,27 @@
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "PEF36D7C306617170"
       },
       "fieldConfig": {
         "defaults": {},
         "overrides": []
       },
       "gridPos": {
-        "h": 6,
-        "w": 24,
+        "h": 8,
+        "w": 12,
         "x": 0,
-        "y": 6
+        "y": 5
       },
-      "id": 4,
+      "id": 3,
       "options": {
-        "dedupStrategy": "exact",
-        "enableInfiniteScrolling": false,
+        "dedupStrategy": "none",
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
-        "showControls": false,
         "showLabels": false,
-        "showTime": true,
+        "showTime": false,
         "sortOrder": "Descending",
-        "unwrappedColumns": false,
         "wrapLogMessage": false
       },
       "pluginVersion": "11.4.0",
@@ -553,44 +277,41 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "PEF36D7C306617170"
           },
           "editorMode": "code",
-          "expr": "{service_name=\"backend\"} | channel = \"app\" | detected_level > 100",
+          "expr": "{service_name=\"app\"} | channel=\"app\" | detected_level > 100",
           "queryType": "range",
           "refId": "A"
         }
       ],
-      "title": "Backend",
+      "title": "App",
       "type": "logs"
     },
     {
       "datasource": {
         "type": "loki",
-        "uid": "loki"
+        "uid": "PEF36D7C306617170"
       },
       "fieldConfig": {
         "defaults": {},
         "overrides": []
       },
       "gridPos": {
-        "h": 7,
-        "w": 24,
-        "x": 0,
-        "y": 12
+        "h": 8,
+        "w": 12,
+        "x": 12,
+        "y": 5
       },
-      "id": 3,
+      "id": 4,
       "options": {
         "dedupStrategy": "none",
-        "enableInfiniteScrolling": false,
         "enableLogDetails": true,
         "prettifyLogMessage": false,
         "showCommonLabels": false,
-        "showControls": false,
         "showLabels": false,
-        "showTime": true,
+        "showTime": false,
         "sortOrder": "Descending",
-        "unwrappedColumns": false,
         "wrapLogMessage": false
       },
       "pluginVersion": "11.4.0",
@@ -598,10 +319,10 @@
         {
           "datasource": {
             "type": "loki",
-            "uid": "loki"
+            "uid": "PEF36D7C306617170"
           },
           "editorMode": "code",
-          "expr": "{service_name=\"worker\"} | channel = \"app\" | detected_level > 100",
+          "expr": "{service_name=\"worker\"} | channel=\"app\" | detected_level > 100",
           "queryType": "range",
           "refId": "A"
         }
@@ -641,12 +362,12 @@
         "overrides": []
       },
       "gridPos": {
-        "h": 9,
-        "w": 24,
+        "h": 14,
+        "w": 12,
         "x": 0,
-        "y": 19
+        "y": 13
       },
-      "id": 11,
+      "id": 5,
       "options": {
         "cellHeight": "sm",
         "footer": {
@@ -662,29 +383,35 @@
       "pluginVersion": "11.4.0",
       "targets": [
         {
+          "datasource": {
+            "type": "tempo",
+            "uid": "tempo"
+          },
           "filters": [
             {
-              "id": "span-name",
-              "operator": "=",
-              "scope": "span",
-              "tag": "name",
-              "value": "POST api.add_game",
-              "valueType": "string"
-            },
-            {
-              "id": "337df8fa",
+              "id": "a8856304",
               "operator": "=",
               "scope": "span"
+            },
+            {
+              "id": "service-name",
+              "operator": "=",
+              "scope": "resource",
+              "tag": "service.name",
+              "value": [
+                "frontend"
+              ],
+              "valueType": "string"
             }
           ],
+          "key": "Q-26de73da-736f-4476-bfdf-ddf43332a0d7-1",
           "limit": 20,
-          "query": "{name=~\"^(GET|POST|PUT|DELETE|PATCH) api.*\"}",
-          "queryType": "traceql",
+          "queryType": "traceqlSearch",
           "refId": "A",
           "tableType": "traces"
         }
       ],
-      "title": "Traces (API)",
+      "title": "Traces",
       "type": "table"
     }
   ],
@@ -696,13 +423,13 @@
     "list": []
   },
   "time": {
-    "from": "now-15m",
+    "from": "now-30m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
-  "title": "Logs, traces, metrics 📜🔎",
-  "uid": "beavav8rrsbggb",
-  "version": 2,
+  "title": "Logs, traces, metrics ⏱️📊",
+  "uid": "cfj5426vm5lvkc",
+  "version": 1,
   "weekStart": ""
 }

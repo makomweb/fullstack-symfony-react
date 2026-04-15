@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: app-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+data:
+  # Environment
+  APP_ENV: {{ .Values.global.environment }}
+  APP_VERSION: {{ .Chart.AppVersion | quote }}
+  
+  # Database
+  DATABASE_URL: "mysql://{{ .Values.database.env.MYSQL_USER }}:{{ .Values.database.env.MYSQL_PASSWORD }}@db:3306/{{ .Values.database.env.MYSQL_DATABASE }}?serverVersion=8.0&charset=utf8mb4"
+  
+  # Cache & Session Storage
+  REDIS_URL: "redis://cache:{{ .Values.cache.port }}"
+  
+  # Message Queue
+  MESSENGER_TRANSPORT_DSN: "amqp://{{ .Values.rabbitmq.env.RABBITMQ_DEFAULT_USER }}:{{ .Values.rabbitmq.env.RABBITMQ_DEFAULT_PASS }}@rabbitmq:{{ .Values.rabbitmq.port }}/%2f/messages"
+  
+  # Application Secrets & Credentials
+  APP_SECRET: {{ .Values.app.secret | quote }}
+  ADMIN_EMAIL: {{ .Values.app.admin.email | quote }}
+  ADMIN_PASSWORD: {{ .Values.app.admin.password | quote }}
+  
+  # SPA Frontend Configuration
+  SPA_BACKEND_API_URL: {{ .Values.spa.backendApiUrl | quote }}
+  SPA_OTEL_COLLECTOR_ADDRESS: {{ .Values.spa.otelCollectorAddress | quote }}
+  
+  # Telemetry & Observability
+  APP_TELEMETRY: "Otel"
+  OTEL_PHP_AUTOLOAD_ENABLED: "true"
+  OTEL_TRACES_EXPORTER: "otlp"
+  OTEL_EXPORTER_OTLP_ENDPOINT: "http://lgtm:{{ .Values.observability.ports.otelHttp }}"
+
+

@@ -1,8 +1,20 @@
 <!doctype html>
+<!--
+  React SPA entry point.
+  
+  Dev: Run `npm run dev` for Vite dev server with HMR (http://localhost:5173)
+  Prod: Built to dist/index.html, served by backend SpaController
+  
+  Frontend placement:
+  - Dev: `make frontend-build` runs docker-compose service with volume mount to backend/public/dist
+  - Prod: Dockerfile multistage build (frontend stage) → copied to backend/public/dist in prod stage
+  
+  Environment variables injected by Vite plugin.
+-->
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <link rel="icon" type="image/svg+xml" href="/dist/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>React + K8s demo app</title>
     <script id="BACKEND_API_URL-placeholder"></script>

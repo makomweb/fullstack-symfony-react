@@ -1,13 +1,13 @@
 APP_NAME = fullstack-symfony-react
-VERSION = 0.9.1
+VERSION = 0.9.3
 
 .DEFAULT_GOAL := help
 
-.PHONY: build dev prod backend-image frontend-image grafana up down reset \
+.PHONY: build dev prod backend-image grafana up down reset \
 	reset-worker reset-app init composer-install create-database create-schema \
 	load-fixtures init-test create-test-database create-test-schema composer shell \
 	qa sa cs test backend-test frontend-test arch clear cache-clear cache-pool-clear \
-	maintenance maintain show-composer-updates \
+	maintenance maintain show-composer-updates frontend-build \
 	update-composer-dependencies update-npm-dependencies coverage frontend-shell open help
 
 ## Start development environment (build images, start containers, init, open browser)
@@ -20,17 +20,13 @@ dev:
 	docker build . -f ./build/php/Dockerfile --target dev -t ${APP_NAME}-dev:${VERSION}
 	
 ## Build production images (without Docker cache)
-prod: backend-image frontend-image
+prod: backend-image
+
 
 ## Build backend image (without Docker cache)
 backend-image:
 	@echo "Build backend image"
 	docker build . -f ./build/php/Dockerfile --target prod --no-cache -t ${APP_NAME}:${VERSION}
-
-## Build frontend image (without Docker cache)
-frontend-image:
-	@echo "Build frontend image"
-	docker build . -f ./build/node/Dockerfile --target prod --no-cache -t ${APP_NAME}-web:${VERSION}
 
 grafana:
 	@echo "Build grafana image"
@@ -44,8 +40,8 @@ up:
 down:
 	docker compose down
 
-## Reset all services
-reset: reset-worker reset-app
+## Reset worker, app, frontend
+reset: reset-worker reset-app reset-frontend
 
 ## Reset worker
 reset-worker:
@@ -57,13 +53,23 @@ reset-app:
 	@echo "Reset app"
 	docker compose restart app
 
+## Reset frontend (Vite development server)
+reset-frontend:
+	@echo "Reset frontend"
+	docker compose restart frontend
+
 ## Initialize project (install dependencies, create database, schema, load fixtures)
-init: composer-install create-database create-schema load-fixtures
+init: composer-install frontend-build create-database create-schema load-fixtures
 
 ## Install composer dependencies
 composer-install:
 	@echo "Install composer dependencies"
 	docker compose exec -it app composer install
+
+## Build frontend assets (Vite production build)
+frontend-build:
+	@echo "Build frontend assets to backend/public/dist"
+	docker compose run --rm frontend-build
 
 ## Create database
 create-database:

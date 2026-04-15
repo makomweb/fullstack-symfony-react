@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: worker
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "chart.labels" . | nindent 4 }}
+    app: worker
+spec:
+  replicas: {{ .Values.app.replicas }}
+  selector:
+    matchLabels:
+      {{- include "chart.selectorLabels" . | nindent 6 }}
+      app: worker
+  template:
+    metadata:
+      labels:
+        {{- include "chart.selectorLabels" . | nindent 8 }}
+        app: worker
+    spec:
+      containers:
+      - name: worker
+        image: {{ .Values.app.image }}
+        imagePullPolicy: Always
+        command: ["php", "bin/console", "messenger:consume", "async", "-vv"]
+        envFrom:
+        - configMapRef:
+            name: app-config
+        env:
+        - name: OTEL_SERVICE_NAME
+          value: "worker"
+      initContainers:
+      - name: wait-for-db
+        image: busybox:latest
+        command: ['sh', '-c', 'until nc -z db 3306; do echo waiting for db; sleep 2; done']
+      - name: wait-for-rabbitmq
+        image: busybox:latest
+        command: ['sh', '-c', 'until nc -z rabbitmq 5672; do echo waiting for rabbitmq; sleep 2; done']
+
